@@ -5,14 +5,14 @@ import Features from './Features';
 import CallToAction from './CallToAction';
 import Footer from './Footer';
 
-export default function LandingPage() {
+export default function LandingPage({ onNavigateWorkspace }) {
   return (
     <>
-      <Header />
+      <Header onNavigateWorkspace={onNavigateWorkspace} />
       <main className="technical-grid min-h-screen">
-        <Hero />
+        <Hero onNavigateWorkspace={onNavigateWorkspace} />
         <Features />
-        <CallToAction />
+        <CallToAction onNavigateWorkspace={onNavigateWorkspace} />
       </main>
       <Footer />
     </>

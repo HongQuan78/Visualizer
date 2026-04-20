@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function CallToAction() {
+export default function CallToAction({ onNavigateWorkspace }) {
   return (
     <section className="py-32 px-8">
       <div className="max-w-screen-xl mx-auto glass-panel ghost-border rounded-3xl p-16 text-center relative overflow-hidden">
@@ -11,7 +11,7 @@ export default function CallToAction() {
             Join 50k+ engineers and students who use Kinetic Blueprint to master the art of algorithmic thinking.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <button className="primary-gradient w-full sm:w-auto px-12 py-5 text-on-primary font-black rounded-sm shadow-2xl shadow-primary/20 active:scale-95 transition-transform">
+            <button className="primary-gradient w-full sm:w-auto px-12 py-5 text-on-primary font-black rounded-sm shadow-2xl shadow-primary/20 active:scale-95 transition-transform" onClick={onNavigateWorkspace}>
               START VISUALIZING
             </button>
             <button className="w-full sm:w-auto px-12 py-5 bg-transparent border border-outline-variant/30 text-on-surface font-bold rounded-sm hover:bg-surface-variant/30 transition-colors">

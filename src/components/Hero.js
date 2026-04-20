@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Hero() {
+export default function Hero({ onNavigateWorkspace }) {
   return (
     <section className="relative pt-24 pb-32 px-8 overflow-hidden">
       <div className="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
@@ -16,7 +16,7 @@ export default function Hero() {
             Transform abstract complexity into architectural clarity. A high-fidelity sandbox for visualizing the internal mechanics of modern computation.
           </p>
           <div className="flex flex-wrap gap-4">
-            <button className="primary-gradient px-8 py-4 text-on-primary font-bold rounded-sm flex items-center gap-3 active:scale-95 transition-transform">
+            <button className="primary-gradient px-8 py-4 text-on-primary font-bold rounded-sm flex items-center gap-3 active:scale-95 transition-transform" onClick={onNavigateWorkspace}>
               Initialize Workspace
               <span className="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
             </button>
