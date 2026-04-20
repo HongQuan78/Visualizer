@@ -30,3 +30,31 @@ code {
 .primary-gradient {
     background: linear-gradient(135deg, #4cd7f6 0%, #008da5 100%);
 }
+.technical-void {
+    background: radial-gradient(circle at center, #131b2e 0%, #060e20 100%);
+}
+
+/* ─── Scrollbar personalizado (Kinetic Blueprint) ─── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(76, 215, 246, 0.15);
+    border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(76, 215, 246, 0.35);
+}
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(76, 215, 246, 0.15) transparent;
+}

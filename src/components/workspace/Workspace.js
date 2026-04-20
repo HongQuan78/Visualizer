@@ -3,31 +3,70 @@ import TopNavBar from './TopNavBar';
 import SideNavBar from './SideNavBar';
 import VisualizationStage from './VisualizationStage';
 import CodeViewer from './CodeViewer';
-import Footer from './Footer';
+import useVisualizerEngine from './hooks/useVisualizerEngine';
+import { BUBBLE_SORT_META } from './algorithms/bubbleSort';
 
 export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
+  const engine = useVisualizerEngine();
+
   return (
-    <div className="overflow-hidden h-screen flex flex-col">
+    <div className="overflow-hidden h-screen flex flex-col bg-surface">
       <TopNavBar onNavigateHome={onNavigateHome} onNavigateLibrary={onNavigateLibrary} />
       <div className="flex flex-1 overflow-hidden">
-        <SideNavBar />
-        <main className="flex-1 flex flex-col bg-surface relative overflow-hidden">
-          {/* Visualization Header */}
-          <div className="px-12 pt-12 pb-6 flex justify-between items-end z-10">
+        <SideNavBar
+          sourceArray={engine.sourceArray}
+          arraySize={engine.arraySize}
+          currentStepIndex={engine.currentStepIndex}
+          totalSteps={engine.totalSteps}
+          onArraySizeChange={engine.handleArraySizeChange}
+          onRandomize={engine.handleRandomize}
+          onReset={engine.reset}
+        />
+        <main className="flex-1 flex flex-col overflow-hidden">
+          {/* Encabezado del algoritmo - compacto */}
+          <div className="px-8 pt-6 pb-3 flex justify-between items-end">
             <div>
-              <h1 className="text-[3.5rem] font-extrabold tracking-tighter leading-none mb-2">QuickSort.v2</h1>
-              <div className="flex gap-4 items-center">
-                <span className="bg-secondary-container/30 text-secondary px-3 py-1 rounded text-[10px] font-mono tracking-widest uppercase">Structural: Recursion</span>
-                <span className="bg-primary/10 text-primary px-3 py-1 rounded text-[10px] font-mono tracking-widest uppercase">Active: Partitioning</span>
+              <h1 className="text-4xl font-extrabold tracking-tighter leading-none mb-1.5">
+                {BUBBLE_SORT_META.name}
+              </h1>
+              <div className="flex gap-3 items-center">
+                <span className="bg-secondary-container/30 text-secondary px-2.5 py-0.5 rounded text-[9px] font-mono tracking-widest uppercase">
+                  {BUBBLE_SORT_META.category}: {BUBBLE_SORT_META.tag}
+                </span>
+                <span className={`px-2.5 py-0.5 rounded text-[9px] font-mono tracking-widest uppercase ${
+                  engine.isPlaying
+                    ? 'bg-primary/10 text-primary'
+                    : engine.isFinished
+                      ? 'bg-tertiary/10 text-tertiary'
+                      : 'bg-surface-container-highest text-on-surface-variant'
+                }`}>
+                  {engine.isPlaying ? 'Running' : engine.isFinished ? 'Complete' : 'Ready'}
+                </span>
               </div>
             </div>
           </div>
-          
-          <VisualizationStage />
-          <CodeViewer />
+
+          {/* Área principal: visualización + código lado a lado */}
+          <div className="flex-1 flex overflow-hidden">
+            <VisualizationStage
+              currentStep={engine.currentStep}
+              isPlaying={engine.isPlaying}
+              speed={engine.speed}
+              onTogglePlayback={engine.togglePlayback}
+              onStepForward={engine.stepForward}
+              onStepBackward={engine.stepBackward}
+              onSpeedChange={engine.handleSpeedChange}
+              currentStepIndex={engine.currentStepIndex}
+              totalSteps={engine.totalSteps}
+            />
+
+            <CodeViewer
+              activeLine={engine.currentStep.codeLine}
+              isPlaying={engine.isPlaying}
+            />
+          </div>
         </main>
       </div>
-      <Footer />
     </div>
   );
 }
