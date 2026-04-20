@@ -5,10 +5,10 @@ import VisualizationStage from './VisualizationStage';
 import CodeViewer from './CodeViewer';
 import Footer from './Footer';
 
-export default function Workspace({ onNavigateHome }) {
+export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
   return (
     <div className="overflow-hidden h-screen flex flex-col">
-      <TopNavBar onNavigateHome={onNavigateHome} />
+      <TopNavBar onNavigateHome={onNavigateHome} onNavigateLibrary={onNavigateLibrary} />
       <div className="flex flex-1 overflow-hidden">
         <SideNavBar />
         <main className="flex-1 flex flex-col bg-surface relative overflow-hidden">

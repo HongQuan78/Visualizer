@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Header({ onNavigateWorkspace }) {
+export default function Header({ onNavigateWorkspace, onNavigateLibrary }) {
   return (
     <header className="w-full sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl shadow-2xl shadow-cyan-900/10">
       <div className="flex items-center justify-between px-8 py-4 w-full max-w-screen-2xl mx-auto">
@@ -8,7 +8,7 @@ export default function Header({ onNavigateWorkspace }) {
         <nav className="hidden md:flex items-center gap-8 font-sans text-sm tracking-wide">
           <a className="text-cyan-400 border-b-2 border-cyan-400 pb-1 active:scale-95 transition-transform" href="#">Gallery</a>
           <a className="text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-200 active:scale-95 transition-transform px-2 py-1" href="#" onClick={onNavigateWorkspace}>Workspace</a>
-          <a className="text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-200 active:scale-95 transition-transform px-2 py-1" href="#">Library</a>
+          <a className="text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-200 active:scale-95 transition-transform px-2 py-1" href="#" onClick={onNavigateLibrary}>Library</a>
           <a className="text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-200 active:scale-95 transition-transform px-2 py-1" href="#">Benchmarks</a>
         </nav>
         <div className="flex items-center gap-6">

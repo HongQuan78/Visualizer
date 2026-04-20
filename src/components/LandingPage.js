@@ -5,10 +5,10 @@ import Features from './Features';
 import CallToAction from './CallToAction';
 import Footer from './Footer';
 
-export default function LandingPage({ onNavigateWorkspace }) {
+export default function LandingPage({ onNavigateWorkspace, onNavigateLibrary }) {
   return (
     <>
-      <Header onNavigateWorkspace={onNavigateWorkspace} />
+      <Header onNavigateWorkspace={onNavigateWorkspace} onNavigateLibrary={onNavigateLibrary} />
       <main className="technical-grid min-h-screen">
         <Hero onNavigateWorkspace={onNavigateWorkspace} />
         <Features />
