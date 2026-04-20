@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TopNavBar from './TopNavBar';
 import SideNavBar from './SideNavBar';
 import VisualizationStage from './VisualizationStage';
 import CodeViewer from './CodeViewer';
 import useVisualizerEngine from './hooks/useVisualizerEngine';
-import { BUBBLE_SORT_META } from './algorithms/bubbleSort';
 
 export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
-  const engine = useVisualizerEngine();
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubble-sort');
+  const engine = useVisualizerEngine(selectedAlgorithm);
+  const meta = engine.currentAlgoConfig.meta;
 
   return (
     <div className="overflow-hidden h-screen flex flex-col bg-surface">
@@ -21,17 +22,20 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
           onArraySizeChange={engine.handleArraySizeChange}
           onRandomize={engine.handleRandomize}
           onReset={engine.reset}
+          selectedAlgorithm={selectedAlgorithm}
+          onAlgorithmChange={setSelectedAlgorithm}
+          algorithmMeta={meta}
         />
         <main className="flex-1 flex flex-col overflow-hidden">
           {/* Encabezado del algoritmo - compacto */}
           <div className="px-8 pt-6 pb-3 flex justify-between items-end">
             <div>
               <h1 className="text-4xl font-extrabold tracking-tighter leading-none mb-1.5">
-                {BUBBLE_SORT_META.name}
+                {meta.name}
               </h1>
               <div className="flex gap-3 items-center">
                 <span className="bg-secondary-container/30 text-secondary px-2.5 py-0.5 rounded text-[9px] font-mono tracking-widest uppercase">
-                  {BUBBLE_SORT_META.category}: {BUBBLE_SORT_META.tag}
+                  {meta.category}: {meta.tag}
                 </span>
                 <span className={`px-2.5 py-0.5 rounded text-[9px] font-mono tracking-widest uppercase ${
                   engine.isPlaying
@@ -63,6 +67,7 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
             <CodeViewer
               activeLine={engine.currentStep.codeLine}
               isPlaying={engine.isPlaying}
+              code={engine.currentAlgoConfig.code}
             />
           </div>
         </main>

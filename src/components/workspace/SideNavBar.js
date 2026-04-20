@@ -15,6 +15,8 @@ export default function SideNavBar({
   onRandomize,
   onReset,
   selectedAlgorithm = 'bubble-sort',
+  onAlgorithmChange,
+  algorithmMeta,
 }) {
   // Controla qué categoría está expandida en el acordeón
   const [expandedCategory, setExpandedCategory] = useState('Sorting');
@@ -79,6 +81,11 @@ export default function SideNavBar({
                         <button
                           key={algo.id}
                           disabled={isDisabled}
+                          onClick={() => {
+                            if (!isDisabled && onAlgorithmChange) {
+                              onAlgorithmChange(algo.id);
+                            }
+                          }}
                           className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-all duration-200 group ${
                             isActive
                               ? 'bg-primary/10 border-l-2 border-primary text-on-surface'
@@ -172,11 +179,11 @@ export default function SideNavBar({
           <div className="grid grid-cols-2 gap-2">
             <div className="bg-surface-container-low p-3 rounded-lg ghost-border">
               <div className="text-[9px] text-slate-500 mb-0.5">COMPLEXITY</div>
-              <div className="font-mono text-xs font-bold text-secondary">{BUBBLE_SORT_META.complexity}</div>
+              <div className="font-mono text-xs font-bold text-secondary">{algorithmMeta?.complexity}</div>
             </div>
             <div className="bg-surface-container-low p-3 rounded-lg ghost-border">
               <div className="text-[9px] text-slate-500 mb-0.5">STEPS</div>
-              <div className="font-mono text-xs font-bold text-primary">{currentStepIndex}/{totalSteps - 1}</div>
+              <div className="font-mono text-xs font-bold text-primary">{currentStepIndex}/{totalSteps > 0 ? totalSteps - 1 : 0}</div>
             </div>
           </div>
         </div>

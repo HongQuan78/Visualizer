@@ -1,5 +1,4 @@
 import React from 'react';
-import { BUBBLE_SORT_CODE } from './algorithms/bubbleSort';
 
 /**
  * CodeViewer: panel lateral que muestra el pseudo-código del algoritmo
@@ -8,8 +7,9 @@ import { BUBBLE_SORT_CODE } from './algorithms/bubbleSort';
  * Props:
  *  - activeLine: número de línea activa (1-indexed)
  *  - isPlaying: si la animación está corriendo
+ *  - code: líneas del pseudo-código
  */
-export default function CodeViewer({ activeLine, isPlaying }) {
+export default function CodeViewer({ activeLine, isPlaying, code = [] }) {
   return (
     <div className="w-80 flex-shrink-0 bg-surface-container-lowest border-l border-slate-800/50 flex flex-col z-10">
       <div className="flex justify-between items-center px-6 py-4 border-b border-slate-800/50">
@@ -18,7 +18,7 @@ export default function CodeViewer({ activeLine, isPlaying }) {
       </div>
       <div className="flex-1 overflow-y-auto px-6 py-4">
         <div className="font-mono text-xs space-y-1 text-slate-400">
-          {BUBBLE_SORT_CODE.map(({ line, text }) => {
+          {code.map(({ line, text }) => {
             const isActive = line === activeLine;
 
             return (

@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { generateBubbleSortSteps, generateRandomArray } from '../algorithms/bubbleSort';
+import { generateBubbleSortSteps, generateRandomArray, BUBBLE_SORT_META, BUBBLE_SORT_CODE } from '../algorithms/bubbleSort';
+import { generateSelectionSortSteps, SELECTION_SORT_META, SELECTION_SORT_CODE } from '../algorithms/selectionSort';
 
 /**
  * Hook personalizado que gestiona toda la lógica de reproducción
@@ -9,13 +10,28 @@ import { generateBubbleSortSteps, generateRandomArray } from '../algorithms/bubb
 const DEFAULT_ARRAY_SIZE = 12;
 const SPEED_MAP = { '0.5x': 1200, '1x': 600, '2x': 300, '4x': 100 };
 
-export default function useVisualizerEngine() {
+const ALGORITHM_CONFIG = {
+  'bubble-sort': {
+    generator: generateBubbleSortSteps,
+    meta: BUBBLE_SORT_META,
+    code: BUBBLE_SORT_CODE
+  },
+  'selection-sort': {
+    generator: generateSelectionSortSteps,
+    meta: SELECTION_SORT_META,
+    code: SELECTION_SORT_CODE
+  }
+};
+
+export default function useVisualizerEngine(selectedAlgorithmId = 'bubble-sort') {
   // Estado del arreglo fuente
   const [arraySize, setArraySize] = useState(DEFAULT_ARRAY_SIZE);
   const [sourceArray, setSourceArray] = useState(() => generateRandomArray(DEFAULT_ARRAY_SIZE));
+  
+  const currentAlgoConfig = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
 
   // Estado del motor de pasos
-  const [steps, setSteps] = useState(() => generateBubbleSortSteps(generateRandomArray(DEFAULT_ARRAY_SIZE)).steps);
+  const [steps, setSteps] = useState(() => currentAlgoConfig.generator(sourceArray).steps);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState('1x');
@@ -24,6 +40,15 @@ export default function useVisualizerEngine() {
   const intervalRef = useRef(null);
   const currentStepRef = useRef(currentStepIndex);
   const stepsRef = useRef(steps);
+
+  // Update steps when algorithm changes
+  useEffect(() => {
+    stopPlayback();
+    const config = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
+    const { steps: newSteps } = config.generator(sourceArray);
+    setSteps(newSteps);
+    setCurrentStepIndex(0);
+  }, [selectedAlgorithmId, sourceArray]);
 
   // Mantener refs sincronizados con el estado
   useEffect(() => {
@@ -39,11 +64,13 @@ export default function useVisualizerEngine() {
   // ──────────────────────────────
   const regenerate = useCallback((newArray) => {
     stopPlayback();
-    const { steps: newSteps } = generateBubbleSortSteps(newArray);
+    // Use the current ref or selectedAlgorithmId to regenerate
+    const config = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
+    const { steps: newSteps } = config.generator(newArray);
     setSourceArray(newArray);
     setSteps(newSteps);
     setCurrentStepIndex(0);
-  }, []);
+  }, [selectedAlgorithmId]);
 
   // ──────────────────────────────
   // Controles de arreglo
@@ -163,6 +190,9 @@ export default function useVisualizerEngine() {
     totalSteps,
     progress,
     isFinished,
+
+    // Configuración actual
+    currentAlgoConfig,
 
     // Estado de reproducción
     isPlaying,

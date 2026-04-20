@@ -22,7 +22,7 @@ const ALGORITHM_REGISTRY = [
         name: 'Selection Sort',
         complexity: 'O(n²)',
         tag: 'Comparison',
-        available: false,
+        available: true,
       },
       {
         id: 'insertion-sort',

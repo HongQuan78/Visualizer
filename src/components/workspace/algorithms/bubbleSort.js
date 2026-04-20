@@ -13,15 +13,15 @@
 
 // Líneas del pseudo-código de Bubble Sort (para el CodeViewer)
 export const BUBBLE_SORT_CODE = [
-  { line: 1,  text: 'function bubbleSort(arr) {' },
-  { line: 2,  text: '  const n = arr.length;' },
-  { line: 3,  text: '  for (let i = 0; i < n - 1; i++) {' },
-  { line: 4,  text: '    for (let j = 0; j < n - i - 1; j++) {' },
-  { line: 5,  text: '      if (arr[j] > arr[j + 1]) {' },
-  { line: 6,  text: '        swap(arr[j], arr[j + 1]);' },
-  { line: 7,  text: '      }' },
-  { line: 8,  text: '    }' },
-  { line: 9,  text: '  }' },
+  { line: 1, text: 'function bubbleSort(arr) {' },
+  { line: 2, text: '  const n = arr.length;' },
+  { line: 3, text: '  for (let i = 0; i < n - 1; i++) {' },
+  { line: 4, text: '    for (let j = 0; j < n - i - 1; j++) {' },
+  { line: 5, text: '      if (arr[j] > arr[j + 1]) {' },
+  { line: 6, text: '        swap(arr[j], arr[j + 1]);' },
+  { line: 7, text: '      }' },
+  { line: 8, text: '    }' },
+  { line: 9, text: '  }' },
   { line: 10, text: '  return arr;' },
   { line: 11, text: '}' },
 ];
@@ -51,7 +51,7 @@ export function generateBubbleSortSteps(inputArray) {
     swapping: null,
     sorted: new Set(sorted),
     codeLine: 1,
-    description: 'Inicializando Bubble Sort...',
+    description: 'Initializing Bubble Sort...',
   });
 
   // Paso: declarar n
