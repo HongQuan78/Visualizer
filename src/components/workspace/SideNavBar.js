@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ALGORITHM_REGISTRY from './algorithms/registry';
-import { BUBBLE_SORT_META } from './algorithms/bubbleSort';
+import { BUBBLE_SORT_META } from './algorithms/sorting/bubbleSort';
 
 /**
  * SideNavBar: panel lateral con selector de algoritmo agrupado por categoría

@@ -1,12 +1,12 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { generateBubbleSortSteps, generateRandomArray, BUBBLE_SORT_META, BUBBLE_SORT_CODE } from '../algorithms/bubbleSort';
-import { generateSelectionSortSteps, SELECTION_SORT_META, SELECTION_SORT_CODE } from '../algorithms/selectionSort';
-import { generateInsertionSortSteps, INSERTION_SORT_META, INSERTION_SORT_CODE } from '../algorithms/insertionSort';
-import { generateMergeSortSteps, MERGE_SORT_META, MERGE_SORT_CODE } from '../algorithms/mergeSort';
-import { generateBFSSteps, generateRandomGraph, BFS_META, BFS_CODE } from '../algorithms/bfs';
-import { generateDFSSteps, DFS_META, DFS_CODE } from '../algorithms/dfs';
-import { generateBSTInsertSteps, generateRandomBSTValues, BST_INSERT_META, BST_INSERT_CODE } from '../algorithms/bstInsert';
-import { generateFibonacciSteps, generateFibonacciInput, FIBONACCI_META, FIBONACCI_CODE } from '../algorithms/fibonacci';
+import { generateBubbleSortSteps, generateRandomArray, BUBBLE_SORT_META, BUBBLE_SORT_CODE } from '../algorithms/sorting/bubbleSort';
+import { generateSelectionSortSteps, SELECTION_SORT_META, SELECTION_SORT_CODE } from '../algorithms/sorting/selectionSort';
+import { generateInsertionSortSteps, INSERTION_SORT_META, INSERTION_SORT_CODE } from '../algorithms/sorting/insertionSort';
+import { generateMergeSortSteps, MERGE_SORT_META, MERGE_SORT_CODE } from '../algorithms/sorting/mergeSort';
+import { generateBFSSteps, generateRandomGraph, BFS_META, BFS_CODE } from '../algorithms/graphs/bfs';
+import { generateDFSSteps, DFS_META, DFS_CODE } from '../algorithms/graphs/dfs';
+import { generateBSTInsertSteps, generateRandomBSTValues, BST_INSERT_META, BST_INSERT_CODE } from '../algorithms/trees/bstInsert';
+import { generateFibonacciSteps, generateFibonacciInput, FIBONACCI_META, FIBONACCI_CODE } from '../algorithms/dynamic/fibonacci';
 
 /**
  * Hook personalizado que gestiona toda la lógica de reproducción
