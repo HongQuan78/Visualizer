@@ -29,7 +29,7 @@ const ALGORITHM_REGISTRY = [
         name: 'Insertion Sort',
         complexity: 'O(n²)',
         tag: 'Comparison',
-        available: false,
+        available: true,
       },
       {
         id: 'merge-sort',

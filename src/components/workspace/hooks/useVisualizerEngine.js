@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { generateBubbleSortSteps, generateRandomArray, BUBBLE_SORT_META, BUBBLE_SORT_CODE } from '../algorithms/bubbleSort';
 import { generateSelectionSortSteps, SELECTION_SORT_META, SELECTION_SORT_CODE } from '../algorithms/selectionSort';
+import { generateInsertionSortSteps, INSERTION_SORT_META, INSERTION_SORT_CODE } from '../algorithms/insertionSort';
 
 /**
  * Hook personalizado que gestiona toda la lógica de reproducción
@@ -20,6 +21,11 @@ const ALGORITHM_CONFIG = {
     generator: generateSelectionSortSteps,
     meta: SELECTION_SORT_META,
     code: SELECTION_SORT_CODE
+  },
+  'insertion-sort': {
+    generator: generateInsertionSortSteps,
+    meta: INSERTION_SORT_META,
+    code: INSERTION_SORT_CODE
   }
 };
 
