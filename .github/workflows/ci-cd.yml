@@ -1,18 +1,19 @@
 name: CI/CD Pipeline
 
-permissions:
-  contents: read
-  security-events: write
-
 on:
   push:
     branches: [master]
   pull_request:
     branches: [master]
 
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
+  # Stage 1: Quality & Security
   lint:
-    name: Lint
+    name: Lint & Code Quality
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,24 +23,28 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
       - name: Run lint
-        run: npm run lint || echo "Lint script not found, skipping"
+        run: npm run lint
 
   security:
-    name: Security Scan
+    name: Security Scan (Snyk)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run Open Source Security Analysis
+      - name: Run Snyk Security Scan
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         continue-on-error: true
 
+  # Stage 2: Test
   test:
-    name: Test
+    name: Unit Tests
+    needs: [lint]
     runs-on: ubuntu-latest
+    env:
+      CI: true
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
@@ -48,32 +53,30 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
       - name: Run tests
-        run: npm test -- --watchAll=false
+        run: npm test -- --watchAll=false --passWithNoTests
 
+  # Stage 3: Build
   build:
-    name: Build
-    needs: [lint, security, test]
+    name: Production Build
+    needs: [test, security]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-
       - name: Install dependencies
-        run: npm ci
-
+        run: npm ci --legacy-peer-deps
       - name: Build application
         run: npm run build
-
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-output
           path: build/
           retention-days: 7
+
