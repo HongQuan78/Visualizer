@@ -7,11 +7,11 @@ import { BUBBLE_SORT_META } from './algorithms/bubbleSort';
  * y controles funcionales para la visualización activa.
  */
 export default function SideNavBar({
-  sourceArray,
-  arraySize,
+  sourceData,
+  dataSize,
   currentStepIndex,
   totalSteps,
-  onArraySizeChange,
+  onDataSizeChange,
   onRandomize,
   onReset,
   selectedAlgorithm = 'bubble-sort',
@@ -19,7 +19,7 @@ export default function SideNavBar({
   algorithmMeta,
 }) {
   // Controla qué categoría está expandida en el acordeón
-  const [expandedCategory, setExpandedCategory] = useState('Sorting');
+  const [expandedCategory, setExpandedCategory] = useState(algorithmMeta?.category || 'Sorting');
 
   function toggleCategory(category) {
     setExpandedCategory((prev) => (prev === category ? null : category));
@@ -127,12 +127,17 @@ export default function SideNavBar({
         <div className="px-4 pb-4">
           <label className="font-mono text-[9px] uppercase tracking-widest text-slate-500 block mb-3">Input Configuration</label>
           <div className="space-y-3">
-            {/* Arreglo fuente */}
+            {/* Dato fuente */}
             <div>
-              <label className="text-[10px] text-on-surface-variant mb-1.5 block">Source Array</label>
+              <label className="text-[10px] text-on-surface-variant mb-1.5 block">
+                {Array.isArray(sourceData) ? 'Source Array' : 'Source Graph'}
+              </label>
               <div className="bg-surface-container-lowest p-2.5 rounded-lg ghost-border overflow-x-auto">
                 <code className="font-mono text-[11px] text-primary whitespace-nowrap">
-                  [{sourceArray.join(', ')}]
+                  {Array.isArray(sourceData) 
+                    ? `[${sourceData.join(', ')}]` 
+                    : `Nodes: ${sourceData.nodes.length}, Edges: ${Object.values(sourceData.adjList).flat().length / 2}`
+                  }
                 </code>
               </div>
             </div>
@@ -140,16 +145,18 @@ export default function SideNavBar({
             {/* Slider de tamaño */}
             <div>
               <div className="flex justify-between mb-1.5">
-                <label className="text-[10px] text-on-surface-variant">Array Size</label>
-                <span className="font-mono text-[10px] text-primary font-bold">{arraySize}</span>
+                <label className="text-[10px] text-on-surface-variant">
+                  {Array.isArray(sourceData) ? 'Array Size' : 'Node Count'}
+                </label>
+                <span className="font-mono text-[10px] text-primary font-bold">{dataSize}</span>
               </div>
               <input
                 className="w-full h-1 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary"
                 type="range"
                 min="4"
-                max="30"
-                value={arraySize}
-                onChange={(e) => onArraySizeChange(Number(e.target.value))}
+                max={Array.isArray(sourceData) ? 30 : 12}
+                value={dataSize}
+                onChange={(e) => onDataSizeChange(Number(e.target.value))}
               />
             </div>
 

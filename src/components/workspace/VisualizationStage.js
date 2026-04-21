@@ -1,19 +1,9 @@
 import React from 'react';
 import FloatingPlaybackBar from './FloatingPlaybackBar';
+import CodeViewer from './CodeViewer';
 
 /**
- * VisualizationStage: renderiza las barras del arreglo de forma dinámica
- * según el snapshot actual del motor de algoritmo.
- *
- * Props:
- *  - currentStep: snapshot actual (array, comparing, swapping, sorted)
- *  - isPlaying: si la animación está corriendo
- *  - speed: velocidad actual
- *  - onTogglePlayback: callback play/pause
- *  - onStepForward: callback paso siguiente
- *  - onStepBackward: callback paso anterior
- *  - onSpeedChange: callback cambio de velocidad
- *  - currentStepIndex, totalSteps: para la barra de progreso
+ * VisualizationStage: renders array bars dynamically.
  */
 export default function VisualizationStage({
   currentStep,
@@ -25,8 +15,18 @@ export default function VisualizationStage({
   onSpeedChange,
   currentStepIndex,
   totalSteps,
+  code = [],
 }) {
-  const { array, comparing, swapping, sorted } = currentStep;
+  // Safety check to prevent crashes during algorithm switching
+  if (!currentStep || !currentStep.array) {
+    return (
+      <div className="flex-1 relative flex flex-col p-12 overflow-hidden bg-surface items-center justify-center">
+        <div className="font-mono text-xs text-slate-500 animate-pulse">Initializing array...</div>
+      </div>
+    );
+  }
+
+  const { array, comparing = [], swapping = null, sorted = new Set() } = currentStep;
 
   // Calcular el valor máximo para escalar las barras
   const maxVal = Math.max(...array, 1);
@@ -68,68 +68,103 @@ export default function VisualizationStage({
   }
 
   return (
-    <div className="flex-1 relative flex flex-col p-12 overflow-hidden">
-      {/* Descripción del paso actual (Tooltip superior) - Centrado en el área de visualización */}
-      <div className="absolute top-8 left-0 w-full pr-[360px] flex justify-center z-20 pointer-events-none">
-        <div className="glass-panel ghost-border rounded-full px-6 py-2 text-center shadow-lg pointer-events-auto">
-          <span className="font-mono text-xs text-on-surface-variant tracking-wide">
+    <div className="flex-1 relative flex flex-col p-8 overflow-hidden bg-surface">
+      {/* Description Tooltip (Fixed Top) */}
+      <div className="flex justify-center mb-8 pr-[360px] z-20">
+        <div className="glass-panel ghost-border rounded-full px-6 py-2 text-center shadow-lg pointer-events-auto max-w-2xl">
+          <span className="font-mono text-xs text-on-surface-variant tracking-wide uppercase">
             {currentStep.description}
           </span>
         </div>
       </div>
 
-      {/* Barras del arreglo */}
-      <div className="w-full flex-1 flex items-end justify-center gap-3 pr-[360px] mb-28 transition-all duration-500">
-        {array.map((value, index) => {
-          const heightPercent = (value / maxVal) * 80 + 5;
-          const barStyle = getBarStyle(index);
+      {/* Main Content Area */}
+      <div className="flex-1 relative flex overflow-hidden">
+        {/* Bars Container */}
+        <div className="flex-1 flex items-end justify-center gap-3 mb-6 px-4 transition-all duration-500 overflow-hidden">
+          {array.map((value, index) => {
+            const heightPercent = (value / maxVal) * 85 + 5;
+            const barStyle = getBarStyle(index);
 
-          return (
-            <div
-              key={index}
-              className={`flex-1 max-w-[60px] flex flex-col items-center justify-end ${barStyle.className}`}
-              style={{
-                height: `${heightPercent}%`,
-                boxShadow: barStyle.shadow,
-                transitionDuration: '400ms',
-                transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
-              }}
-            >
-              <span className="font-mono text-[10px] text-on-surface mb-2 opacity-80 select-none">
-                {value}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Barra de progreso - Centrada en el área de visualización */}
-      <div className="absolute bottom-32 left-0 w-full pr-[360px] flex justify-center z-10 pointer-events-none">
-        <div className="w-full max-w-xl px-12 pointer-events-auto">
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-[10px] text-slate-500 w-12 text-right">
-              {currentStepIndex}/{totalSteps - 1}
-            </span>
-            <div className="flex-1 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+            return (
               <div
-                className="h-full bg-primary rounded-full transition-all duration-300"
-                style={{ width: `${totalSteps > 1 ? (currentStepIndex / (totalSteps - 1)) * 100 : 0}%` }}
-              />
+                key={index}
+                className={`flex-1 max-w-[60px] flex flex-col items-center justify-end ${barStyle.className}`}
+                style={{
+                  height: `${heightPercent}%`,
+                  boxShadow: barStyle.shadow,
+                  transitionDuration: '400ms',
+                  transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+              >
+                <span className="font-mono text-[10px] text-on-surface mb-2 opacity-80 select-none">
+                  {value}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Lane reserved for Sidebar Content (Controls + Code) */}
+        <div className="w-[360px] flex-shrink-0 relative flex flex-col gap-4 min-h-0">
+          {/* Controls Area (Sidebar Integrated) */}
+          <div className="glass-panel ghost-border rounded-xl p-4 shadow-xl flex flex-col gap-4 shrink-0">
+            <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-800/50 pb-2 flex items-center gap-2">
+              <span className="material-symbols-outlined text-[14px]">settings_input_component</span>
+              Playback
+            </div>
+            
+            {/* Progress */}
+            <div className="px-1">
+              <div className="flex justify-between text-[9px] font-mono text-slate-500 mb-1.5 uppercase">
+                <span>Step</span>
+                <span>{currentStepIndex} / {totalSteps - 1}</span>
+              </div>
+              <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-primary transition-all duration-300 shadow-[0_0_8px_rgba(76,215,246,0.5)]"
+                  style={{ width: `${(currentStepIndex / (totalSteps - 1)) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+
+            {/* Playback Controls (Simplified for Sidebar) */}
+            <div className="flex flex-col gap-4 mt-2">
+              <div className="flex items-center justify-between px-2">
+                <button onClick={onStepBackward} className="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-xl">skip_previous</button>
+                <button 
+                  onClick={onTogglePlayback}
+                  className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-black hover:scale-105 transition-transform shadow-lg shadow-primary/20"
+                >
+                  <span className="material-symbols-outlined">{isPlaying ? 'pause' : 'play_arrow'}</span>
+                </button>
+                <button onClick={onStepForward} className="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-xl">skip_next</button>
+              </div>
+
+              <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-800/50">
+                <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Speed</span>
+                <div className="flex gap-1">
+                  {['0.5x', '1x', '2x', '4x'].map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => onSpeedChange(s)}
+                      className={`px-2 py-1 rounded text-[9px] font-mono transition-colors ${
+                        speed === s ? 'bg-primary text-black font-bold' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Controles de reproducción flotantes - Centrados en el área de visualización */}
-      <div className="absolute bottom-8 left-0 w-full pr-[360px] flex justify-center z-10 pointer-events-none">
-        <div className="pointer-events-auto">
-          <FloatingPlaybackBar
+          {/* Code Viewer Integration */}
+          <CodeViewer 
+            activeLine={currentStep.codeLine}
             isPlaying={isPlaying}
-            speed={speed}
-            onTogglePlayback={onTogglePlayback}
-            onStepForward={onStepForward}
-            onStepBackward={onStepBackward}
-            onSpeedChange={onSpeedChange}
+            code={code}
           />
         </div>
       </div>

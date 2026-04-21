@@ -62,7 +62,7 @@ const ALGORITHM_REGISTRY = [
         timeComplexity: 'O(V + E)',
         spaceComplexity: 'O(V)',
         tag: 'Traversal',
-        available: false,
+        available: true,
       },
       {
         id: 'dfs',
