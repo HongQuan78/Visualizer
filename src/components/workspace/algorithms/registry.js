@@ -40,7 +40,7 @@ const ALGORITHM_REGISTRY = [
         timeComplexity: 'O(n log n)',
         spaceComplexity: 'O(n)',
         tag: 'Divide & Conquer',
-        available: false,
+        available: true,
       },
       {
         id: 'quick-sort',

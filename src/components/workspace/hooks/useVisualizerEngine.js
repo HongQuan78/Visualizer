@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { generateBubbleSortSteps, generateRandomArray, BUBBLE_SORT_META, BUBBLE_SORT_CODE } from '../algorithms/bubbleSort';
 import { generateSelectionSortSteps, SELECTION_SORT_META, SELECTION_SORT_CODE } from '../algorithms/selectionSort';
 import { generateInsertionSortSteps, INSERTION_SORT_META, INSERTION_SORT_CODE } from '../algorithms/insertionSort';
+import { generateMergeSortSteps, MERGE_SORT_META, MERGE_SORT_CODE } from '../algorithms/mergeSort';
 import { generateBFSSteps, generateRandomGraph, BFS_META, BFS_CODE } from '../algorithms/bfs';
 import { generateDFSSteps, DFS_META, DFS_CODE } from '../algorithms/dfs';
 import { generateBSTInsertSteps, generateRandomBSTValues, BST_INSERT_META, BST_INSERT_CODE } from '../algorithms/bstInsert';
@@ -37,6 +38,13 @@ const ALGORITHM_CONFIG = {
     dataGenerator: generateRandomArray,
     meta: INSERTION_SORT_META,
     code: INSERTION_SORT_CODE
+  },
+  'merge-sort': {
+    type: 'array',
+    generator: generateMergeSortSteps,
+    dataGenerator: generateRandomArray,
+    meta: MERGE_SORT_META,
+    code: MERGE_SORT_CODE
   },
   'bfs': {
     type: 'graph',

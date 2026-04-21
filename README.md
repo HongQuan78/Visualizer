@@ -26,6 +26,7 @@
 - **Bubble Sort**: The classic swap-based sorting.
 - **Selection Sort**: Finding minimums and placing them in order.
 - **Insertion Sort**: Building a sorted array one element at a time.
+- **Merge Sort**: A divide & conquer algorithm that splits arrays into halves, sorts them, and merges them back together.
 
 ### 🕸️ Graphs
 - **Breadth-First Search (BFS)**: Level-order traversal using a queue.
