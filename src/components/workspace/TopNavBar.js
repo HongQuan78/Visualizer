@@ -3,7 +3,7 @@ import React from 'react';
 const NAV_LINKS = [
   { label: 'Gallery', action: 'home' },
   { label: 'Workspace', active: true },
-  { label: 'Library', action: 'library' },
+  // { label: 'Library', action: 'library' },
   { label: 'Benchmarks' },
 ];
 
