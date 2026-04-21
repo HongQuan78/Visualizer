@@ -11,22 +11,25 @@ import React from 'react';
  */
 export default function CodeViewer({ activeLine, isPlaying, code = [] }) {
   return (
-    <div className="w-80 flex-shrink-0 bg-surface-container-lowest border-l border-slate-800/50 flex flex-col z-10">
-      <div className="flex justify-between items-center px-6 py-4 border-b border-slate-800/50">
-        <div className="text-[10px] font-mono uppercase tracking-widest text-slate-500">Live Execution Trace</div>
-        <span className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-primary animate-pulse' : 'bg-slate-600'}`}></span>
+    <div className="absolute top-6 right-8 w-80 glass-panel rounded-2xl ghost-border p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3)] backdrop-blur-3xl overflow-hidden z-20 flex flex-col max-h-[75%] transition-all duration-300 hover:shadow-cyan-900/20">
+      <div className="flex justify-between items-center mb-6">
+        <div className="text-[10px] font-mono uppercase tracking-widest text-slate-500 font-bold">Live Execution Trace</div>
+        <div className="flex items-center gap-2">
+          <span className="text-[9px] font-mono text-primary opacity-70">{isPlaying ? 'EXECUTING' : 'PAUSED'}</span>
+          <span className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-primary animate-pulse shadow-[0_0_8px_rgba(76,215,246,0.5)]' : 'bg-slate-600'}`}></span>
+        </div>
       </div>
-      <div className="flex-1 overflow-y-auto px-6 py-4">
-        <div className="font-mono text-xs space-y-1 text-slate-400">
+      <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+        <div className="font-mono text-xs space-y-1.5 text-slate-400">
           {code.map(({ line, text }) => {
             const isActive = line === activeLine;
 
             return (
               <div
                 key={line}
-                className={`flex gap-4 rounded transition-all duration-200 ${
+                className={`flex gap-4 transition-all duration-200 ${
                   isActive
-                    ? 'bg-secondary-container/40 -mx-3 px-3 py-1 text-secondary-fixed border-l-2 border-secondary'
+                    ? 'bg-secondary-container/40 -mx-6 px-6 py-0.5 text-secondary-fixed border-l-2 border-secondary'
                     : isLineBeforeActive(line, activeLine)
                       ? 'opacity-50'
                       : ''

@@ -174,39 +174,39 @@ export default function SideNavBar({
         <div className="mx-4 mb-4 border-t border-slate-800/50"></div>
 
         {/* ─── Estado de ejecución ─── */}
-        <div className="px-4 pb-4">
-          <label className="font-mono text-[9px] uppercase tracking-widest text-slate-500 block mb-3">Execution State</label>
-          <div className="grid grid-cols-2 gap-2">
-            <div className="bg-surface-container-low p-3 rounded-lg ghost-border">
-              <div className="text-[9px] text-slate-500 mb-0.5">COMPLEXITY</div>
-              <div className="font-mono text-xs font-bold text-secondary">{algorithmMeta?.complexity}</div>
+        <div className="px-6 pb-6">
+          <label className="font-mono text-[10px] uppercase tracking-widest text-slate-500 block mb-4">Execution State</label>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-surface-container-low p-4 rounded-xl ghost-border">
+              <div className="text-[10px] text-slate-500 mb-1">COMPLEXITY</div>
+              <div className="font-mono text-sm font-bold text-secondary">{algorithmMeta?.complexity}</div>
             </div>
-            <div className="bg-surface-container-low p-3 rounded-lg ghost-border">
-              <div className="text-[9px] text-slate-500 mb-0.5">STEPS</div>
-              <div className="font-mono text-xs font-bold text-primary">{currentStepIndex}/{totalSteps > 0 ? totalSteps - 1 : 0}</div>
+            <div className="bg-surface-container-low p-4 rounded-xl ghost-border">
+              <div className="text-[10px] text-slate-500 mb-1">STEPS</div>
+              <div className="font-mono text-sm font-bold text-primary">{currentStepIndex}/{totalSteps > 0 ? totalSteps - 1 : 0}</div>
             </div>
           </div>
         </div>
 
         {/* ─── Leyenda ─── */}
-        <div className="px-4 pb-4">
-          <label className="font-mono text-[9px] uppercase tracking-widest text-slate-500 block mb-3">Color Legend</label>
-          <div className="grid grid-cols-2 gap-2">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-primary shadow-[0_0_6px_rgba(76,215,246,0.4)]"></div>
-              <span className="text-[10px] text-on-surface-variant">Comparing</span>
+        <div className="px-6 pb-6">
+          <label className="font-mono text-[10px] uppercase tracking-widest text-slate-500 block mb-4">Color Legend</label>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-3.5 h-3.5 rounded bg-primary shadow-[0_0_8px_rgba(76,215,246,0.4)]"></div>
+              <span className="text-[11px] text-on-surface-variant">Comparing</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-tertiary shadow-[0_0_6px_rgba(255,185,95,0.4)]"></div>
-              <span className="text-[10px] text-on-surface-variant">Swapping</span>
+            <div className="flex items-center gap-2.5">
+              <div className="w-3.5 h-3.5 rounded bg-tertiary shadow-[0_0_8px_rgba(255,185,95,0.4)]"></div>
+              <span className="text-[11px] text-on-surface-variant">Swapping</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-secondary shadow-[0_0_6px_rgba(208,188,255,0.2)]"></div>
-              <span className="text-[10px] text-on-surface-variant">Sorted</span>
+            <div className="flex items-center gap-2.5">
+              <div className="w-3.5 h-3.5 rounded bg-secondary shadow-[0_0_8px_rgba(208,188,255,0.2)]"></div>
+              <span className="text-[11px] text-on-surface-variant">Sorted</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-surface-container-highest ghost-border"></div>
-              <span className="text-[10px] text-on-surface-variant">Unsorted</span>
+            <div className="flex items-center gap-2.5">
+              <div className="w-3.5 h-3.5 rounded bg-surface-container-highest ghost-border"></div>
+              <span className="text-[11px] text-on-surface-variant">Unsorted</span>
             </div>
           </div>
         </div>
