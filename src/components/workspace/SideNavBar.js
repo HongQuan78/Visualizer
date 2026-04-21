@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import ALGORITHM_REGISTRY from './algorithms/registry';
-import { BUBBLE_SORT_META } from './algorithms/sorting/bubbleSort';
 
 /**
  * SideNavBar: panel lateral con selector de algoritmo agrupado por categoría
@@ -236,14 +235,15 @@ export default function SideNavBar({
 
       {/* Footer fijo */}
       <div className="border-t border-slate-800/50 p-3 space-y-1">
-        <a className="flex items-center gap-2.5 text-slate-500 px-3 py-1.5 hover:text-slate-200 transition-colors rounded-lg" href="#">
-          <span className="material-symbols-outlined text-sm">menu_book</span>
-          <span className="font-mono text-[9px] uppercase tracking-widest">Docs</span>
-        </a>
-        <a className="flex items-center gap-2.5 text-slate-500 px-3 py-1.5 hover:text-slate-200 transition-colors rounded-lg" href="#">
-          <span className="material-symbols-outlined text-sm">contact_support</span>
-          <span className="font-mono text-[9px] uppercase tracking-widest">Support</span>
-        </a>
+        {['Docs', 'Support'].map((item) => (
+          <button 
+            key={item}
+            className="w-full flex items-center gap-2.5 text-slate-500 px-3 py-1.5 hover:text-slate-200 transition-colors rounded-lg bg-transparent border-none cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-sm">{item === 'Docs' ? 'menu_book' : 'contact_support'}</span>
+            <span className="font-mono text-[9px] uppercase tracking-widest">{item}</span>
+          </button>
+        ))}
       </div>
     </aside>
   );

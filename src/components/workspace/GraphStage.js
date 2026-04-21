@@ -31,8 +31,6 @@ export default function GraphStage({
   const { graph, queue = [], visited = new Set(), activeNode = null, comparing = [] } = currentStep;
   const { nodes = [], adjList = {} } = graph;
 
-  const isDFS = algoId === 'dfs';
-
   // Helper to get edge pairs to avoid duplicates in rendering
   const edges = [];
   const seenEdges = new Set();

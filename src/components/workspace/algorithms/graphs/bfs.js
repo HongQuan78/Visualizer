@@ -39,7 +39,6 @@ export function generateBFSSteps(graphData, startNodeId) {
   
   const visited = new Set();
   const queue = [];
-  const currentPath = []; // For visual trace if needed
 
   // Initial step
   steps.push({

@@ -46,7 +46,6 @@ export default function DPStage({
   const cellX = (idx) => startX + idx * (cellWidth + cellGap);
   const cellCenterX = (idx) => cellX(idx) + cellWidth / 2;
   const cellTopY = startY;
-  const cellCenterY = startY + cellHeight / 2;
 
   return (
     <div className="flex-1 relative flex flex-col p-8 overflow-hidden bg-surface">

@@ -102,7 +102,7 @@ export default function useVisualizerEngine(selectedAlgorithmId = 'bubble-sort')
     } else {
       setRootNodeId(null);
     }
-  }, [sourceData, currentAlgoConfig.type]);
+  }, [sourceData, currentAlgoConfig.type, rootNodeId]);
 
   // Estado del motor de pasos
   const [steps, setSteps] = useState(() => currentAlgoConfig.generator(sourceData).steps);
@@ -185,11 +185,10 @@ export default function useVisualizerEngine(selectedAlgorithmId = 'bubble-sort')
       setDataSize(defaultSize);
       prevTypeRef.current = newType;
     }
-
     const { steps: newSteps } = config.generator(newData, rootNodeId);
     setSteps(newSteps);
     setCurrentStepIndex(0);
-  }, [selectedAlgorithmId, rootNodeId]);
+  }, [selectedAlgorithmId, rootNodeId, sourceData, stopPlayback]);
 
   // Mantener refs sincronizados con el estado
   useEffect(() => {
@@ -210,7 +209,7 @@ export default function useVisualizerEngine(selectedAlgorithmId = 'bubble-sort')
     setSourceData(newData);
     setSteps(newSteps);
     setCurrentStepIndex(0);
-  }, [selectedAlgorithmId, rootNodeId]);
+  }, [selectedAlgorithmId, rootNodeId, stopPlayback]);
 
   // ──────────────────────────────
   // Controles de dato

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const CATEGORIES = ['All Streams', 'Sorting', 'Graphs', 'Dynamic', 'Trees'];
 

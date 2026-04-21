@@ -5,7 +5,6 @@ import VisualizationStage from './VisualizationStage';
 import GraphStage from './GraphStage';
 import TreeStage from './TreeStage';
 import DPStage from './DPStage';
-import CodeViewer from './CodeViewer';
 import VisualizationHeader from './VisualizationHeader';
 import Footer from './Footer';
 import useVisualizerEngine from './hooks/useVisualizerEngine';

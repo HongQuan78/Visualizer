@@ -1,5 +1,4 @@
 import React from 'react';
-import FloatingPlaybackBar from './FloatingPlaybackBar';
 import CodeViewer from './CodeViewer';
 
 /**
