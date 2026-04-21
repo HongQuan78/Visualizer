@@ -31,7 +31,8 @@ export const SELECTION_SORT_CODE = [
 
 export const SELECTION_SORT_META = {
   name: 'Selection Sort',
-  complexity: 'O(n²)',
+  timeComplexity: 'O(n²)',
+  spaceComplexity: 'O(1)',
   category: 'Sorting',
   tag: 'Comparison',
 };

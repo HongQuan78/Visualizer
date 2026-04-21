@@ -96,9 +96,12 @@ export default function SideNavBar({
                         >
                           <div>
                             <div className={`text-xs font-medium ${isActive ? 'text-primary' : ''}`}>{algo.name}</div>
-                            <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-[9px] font-mono text-slate-500">{algo.complexity}</span>
-                              <span className="text-[8px] font-mono text-slate-600">• {algo.tag}</span>
+                            <div className="flex flex-col gap-0.5 mt-1">
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-[8px] font-mono text-primary font-bold">T: {algo.timeComplexity}</span>
+                                <span className="text-[8px] font-mono text-secondary font-bold">S: {algo.spaceComplexity}</span>
+                              </div>
+                              <span className="text-[8px] font-mono text-slate-600 uppercase tracking-wider">{algo.tag}</span>
                             </div>
                           </div>
                           {isDisabled && (
@@ -177,9 +180,18 @@ export default function SideNavBar({
         <div className="px-6 pb-6">
           <label className="font-mono text-[10px] uppercase tracking-widest text-slate-500 block mb-4">Execution State</label>
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-surface-container-low p-4 rounded-xl ghost-border">
-              <div className="text-[10px] text-slate-500 mb-1">COMPLEXITY</div>
-              <div className="font-mono text-sm font-bold text-secondary">{algorithmMeta?.complexity}</div>
+            <div className="bg-surface-container-low p-4 rounded-xl ghost-border flex flex-col justify-center">
+              <div className="text-[9px] text-slate-500 mb-2 uppercase tracking-widest font-bold">Complexity</div>
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-between items-baseline">
+                  <span className="text-[8px] font-mono text-slate-500 uppercase">Time</span>
+                  <span className="font-mono text-xs font-bold text-primary">{algorithmMeta?.timeComplexity}</span>
+                </div>
+                <div className="flex justify-between items-baseline">
+                  <span className="text-[8px] font-mono text-slate-500 uppercase">Space</span>
+                  <span className="font-mono text-xs font-bold text-secondary">{algorithmMeta?.spaceComplexity}</span>
+                </div>
+              </div>
             </div>
             <div className="bg-surface-container-low p-4 rounded-xl ghost-border">
               <div className="text-[10px] text-slate-500 mb-1">STEPS</div>

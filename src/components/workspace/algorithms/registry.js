@@ -2,7 +2,7 @@
  * Registro centralizado de algoritmos disponibles.
  * Cada categoría contiene un grupo de algoritmos con sus metadatos.
  *
- * 'available' indica si el algoritmo está implementado (fase 1: solo Bubble Sort).
+ * 'available' indica si el algoritmo está implementado.
  */
 
 const ALGORITHM_REGISTRY = [
@@ -13,35 +13,40 @@ const ALGORITHM_REGISTRY = [
       {
         id: 'bubble-sort',
         name: 'Bubble Sort',
-        complexity: 'O(n²)',
+        timeComplexity: 'O(n²)',
+        spaceComplexity: 'O(1)',
         tag: 'Comparison',
         available: true,
       },
       {
         id: 'selection-sort',
         name: 'Selection Sort',
-        complexity: 'O(n²)',
+        timeComplexity: 'O(n²)',
+        spaceComplexity: 'O(1)',
         tag: 'Comparison',
         available: true,
       },
       {
         id: 'insertion-sort',
         name: 'Insertion Sort',
-        complexity: 'O(n²)',
+        timeComplexity: 'O(n²)',
+        spaceComplexity: 'O(1)',
         tag: 'Comparison',
         available: true,
       },
       {
         id: 'merge-sort',
         name: 'Merge Sort',
-        complexity: 'O(n log n)',
+        timeComplexity: 'O(n log n)',
+        spaceComplexity: 'O(n)',
         tag: 'Divide & Conquer',
         available: false,
       },
       {
         id: 'quick-sort',
         name: 'Quick Sort',
-        complexity: 'O(n log n)',
+        timeComplexity: 'O(n log n)',
+        spaceComplexity: 'O(log n)',
         tag: 'Divide & Conquer',
         available: false,
       },
@@ -54,21 +59,24 @@ const ALGORITHM_REGISTRY = [
       {
         id: 'bfs',
         name: 'BFS',
-        complexity: 'O(V + E)',
+        timeComplexity: 'O(V + E)',
+        spaceComplexity: 'O(V)',
         tag: 'Traversal',
         available: false,
       },
       {
         id: 'dfs',
         name: 'DFS',
-        complexity: 'O(V + E)',
+        timeComplexity: 'O(V + E)',
+        spaceComplexity: 'O(V)',
         tag: 'Traversal',
         available: false,
       },
       {
         id: 'dijkstra',
         name: "Dijkstra's",
-        complexity: 'O(V²)',
+        timeComplexity: 'O(E log V)',
+        spaceComplexity: 'O(V)',
         tag: 'Shortest Path',
         available: false,
       },
@@ -81,14 +89,16 @@ const ALGORITHM_REGISTRY = [
       {
         id: 'fibonacci',
         name: 'Fibonacci',
-        complexity: 'O(n)',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
         tag: 'Memoization',
         available: false,
       },
       {
         id: 'knapsack',
         name: 'Knapsack 0/1',
-        complexity: 'O(nW)',
+        timeComplexity: 'O(nW)',
+        spaceComplexity: 'O(nW)',
         tag: 'Tabulation',
         available: false,
       },
@@ -101,14 +111,16 @@ const ALGORITHM_REGISTRY = [
       {
         id: 'bst-insert',
         name: 'BST Insert',
-        complexity: 'O(log n)',
+        timeComplexity: 'O(log n)',
+        spaceComplexity: 'O(1)',
         tag: 'Binary Tree',
         available: false,
       },
       {
         id: 'red-black',
         name: 'Red-Black Tree',
-        complexity: 'O(log n)',
+        timeComplexity: 'O(log n)',
+        spaceComplexity: 'O(1)',
         tag: 'Self-Balancing',
         available: false,
       },

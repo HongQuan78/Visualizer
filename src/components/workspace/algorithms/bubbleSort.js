@@ -28,7 +28,8 @@ export const BUBBLE_SORT_CODE = [
 
 export const BUBBLE_SORT_META = {
   name: 'Bubble Sort',
-  complexity: 'O(n²)',
+  timeComplexity: 'O(n²)',
+  spaceComplexity: 'O(1)',
   category: 'Sorting',
   tag: 'Comparison',
 };

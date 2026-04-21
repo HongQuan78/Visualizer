@@ -21,7 +21,8 @@ export const INSERTION_SORT_CODE = [
 
 export const INSERTION_SORT_META = {
   name: 'Insertion Sort',
-  complexity: 'O(n²)',
+  timeComplexity: 'O(n²)',
+  spaceComplexity: 'O(1)',
   category: 'Sorting',
   tag: 'Comparison',
 };

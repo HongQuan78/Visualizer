@@ -37,6 +37,8 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
             tag={meta.tag}
             isPlaying={engine.isPlaying}
             isFinished={engine.isFinished}
+            timeComplexity={meta.timeComplexity}
+            spaceComplexity={meta.spaceComplexity}
           />
 
           <div className="flex-1 relative flex flex-col overflow-hidden">

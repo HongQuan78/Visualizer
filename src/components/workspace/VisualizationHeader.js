@@ -1,6 +1,14 @@
 import React from 'react';
 
-export default function VisualizationHeader({ name, category, tag, isPlaying, isFinished }) {
+export default function VisualizationHeader({ 
+  name, 
+  category, 
+  tag, 
+  isPlaying, 
+  isFinished,
+  timeComplexity,
+  spaceComplexity 
+}) {
   return (
     <div className="px-12 pt-4 pb-1 flex justify-between items-end">
       <div>
@@ -11,7 +19,7 @@ export default function VisualizationHeader({ name, category, tag, isPlaying, is
           <span className="bg-secondary-container/30 text-secondary px-2 py-0.5 rounded text-[8px] font-mono tracking-widest uppercase">
             {category}: {tag}
           </span>
-          <span className={`px-3 py-1 rounded text-[10px] font-mono tracking-widest uppercase ${
+          <span className={`px-2 py-0.5 rounded text-[8px] font-mono tracking-widest uppercase ${
             isPlaying
               ? 'bg-primary/10 text-primary'
               : isFinished
@@ -20,6 +28,17 @@ export default function VisualizationHeader({ name, category, tag, isPlaying, is
           }`}>
             {isPlaying ? 'Active: Running' : isFinished ? 'Status: Complete' : 'Status: Ready'}
           </span>
+        </div>
+      </div>
+
+      <div className="flex gap-8 mb-1">
+        <div className="text-right">
+          <div className="text-[8px] font-mono text-slate-500 uppercase tracking-widest mb-0.5 opacity-70">Time complexity</div>
+          <div className="text-xs font-bold font-mono text-primary tracking-tight">{timeComplexity}</div>
+        </div>
+        <div className="text-right">
+          <div className="text-[8px] font-mono text-slate-500 uppercase tracking-widest mb-0.5 opacity-70">Space complexity</div>
+          <div className="text-xs font-bold font-mono text-secondary tracking-tight">{spaceComplexity}</div>
         </div>
       </div>
     </div>
