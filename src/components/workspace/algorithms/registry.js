@@ -70,7 +70,7 @@ const ALGORITHM_REGISTRY = [
         timeComplexity: 'O(V + E)',
         spaceComplexity: 'O(V)',
         tag: 'Traversal',
-        available: false,
+        available: true,
       },
       {
         id: 'dijkstra',
@@ -92,7 +92,7 @@ const ALGORITHM_REGISTRY = [
         timeComplexity: 'O(n)',
         spaceComplexity: 'O(n)',
         tag: 'Memoization',
-        available: false,
+        available: true,
       },
       {
         id: 'knapsack',
@@ -114,7 +114,7 @@ const ALGORITHM_REGISTRY = [
         timeComplexity: 'O(log n)',
         spaceComplexity: 'O(1)',
         tag: 'Binary Tree',
-        available: false,
+        available: true,
       },
       {
         id: 'red-black',

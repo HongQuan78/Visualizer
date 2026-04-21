@@ -30,10 +30,11 @@ export const BFS_META = {
 /**
  * Generates snapshots for BFS.
  * @param {Object} graphData - { adjList: { node: [neighbors] }, nodes: [{id, x, y}] }
+ * @param {string} startNodeId - The starting node ID.
  */
-export function generateBFSSteps(graphData) {
+export function generateBFSSteps(graphData, startNodeId) {
   const { adjList, nodes } = graphData;
-  const startNode = nodes[0].id;
+  const startNode = startNodeId || nodes[0].id;
   const steps = [];
   
   const visited = new Set();

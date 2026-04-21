@@ -3,6 +3,9 @@ import { generateBubbleSortSteps, generateRandomArray, BUBBLE_SORT_META, BUBBLE_
 import { generateSelectionSortSteps, SELECTION_SORT_META, SELECTION_SORT_CODE } from '../algorithms/selectionSort';
 import { generateInsertionSortSteps, INSERTION_SORT_META, INSERTION_SORT_CODE } from '../algorithms/insertionSort';
 import { generateBFSSteps, generateRandomGraph, BFS_META, BFS_CODE } from '../algorithms/bfs';
+import { generateDFSSteps, DFS_META, DFS_CODE } from '../algorithms/dfs';
+import { generateBSTInsertSteps, generateRandomBSTValues, BST_INSERT_META, BST_INSERT_CODE } from '../algorithms/bstInsert';
+import { generateFibonacciSteps, generateFibonacciInput, FIBONACCI_META, FIBONACCI_CODE } from '../algorithms/fibonacci';
 
 /**
  * Hook personalizado que gestiona toda la lógica de reproducción
@@ -41,6 +44,27 @@ const ALGORITHM_CONFIG = {
     dataGenerator: generateRandomGraph,
     meta: BFS_META,
     code: BFS_CODE
+  },
+  'dfs': {
+    type: 'graph',
+    generator: generateDFSSteps,
+    dataGenerator: generateRandomGraph,
+    meta: DFS_META,
+    code: DFS_CODE
+  },
+  'bst-insert': {
+    type: 'tree',
+    generator: generateBSTInsertSteps,
+    dataGenerator: generateRandomBSTValues,
+    meta: BST_INSERT_META,
+    code: BST_INSERT_CODE
+  },
+  'fibonacci': {
+    type: 'dp',
+    generator: generateFibonacciSteps,
+    dataGenerator: generateFibonacciInput,
+    meta: FIBONACCI_META,
+    code: FIBONACCI_CODE
   }
 };
 
@@ -53,8 +77,24 @@ export default function useVisualizerEngine(selectedAlgorithmId = 'bubble-sort')
     const config = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
     return config.dataGenerator(DEFAULT_ARRAY_SIZE);
   });
-  
+
+  const [rootNodeId, setRootNodeId] = useState(null);
+
   const currentAlgoConfig = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
+
+  // Ref para rastrear el tipo previo y detectar cambios de categoría
+  const prevTypeRef = useRef(currentAlgoConfig.type);
+
+  // Initialize rootNodeId when sourceData changes (for graphs)
+  useEffect(() => {
+    if (currentAlgoConfig.type === 'graph' && sourceData && sourceData.nodes && sourceData.nodes.length > 0) {
+      if (!rootNodeId || !sourceData.nodes.find(n => n.id === rootNodeId)) {
+        setRootNodeId(sourceData.nodes[0].id);
+      }
+    } else {
+      setRootNodeId(null);
+    }
+  }, [sourceData, currentAlgoConfig.type]);
 
   // Estado del motor de pasos
   const [steps, setSteps] = useState(() => currentAlgoConfig.generator(sourceData).steps);
@@ -66,67 +106,6 @@ export default function useVisualizerEngine(selectedAlgorithmId = 'bubble-sort')
   const intervalRef = useRef(null);
   const currentStepRef = useRef(currentStepIndex);
   const stepsRef = useRef(steps);
-
-  // Update steps when algorithm changes (and potentially regenerate data if type changed)
-  useEffect(() => {
-    stopPlayback();
-    const config = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
-    
-    // Si el tipo de dato cambió radicalmente (ej: de array a grafo), regenerar
-    let newData = sourceData;
-    const isOldDataArray = Array.isArray(sourceData);
-    const isNewDataArray = config.type === 'array';
-    
-    if (isOldDataArray !== isNewDataArray) {
-      newData = config.dataGenerator(isNewDataArray ? DEFAULT_ARRAY_SIZE : DEFAULT_NODE_COUNT);
-      setSourceData(newData);
-      setDataSize(isNewDataArray ? DEFAULT_ARRAY_SIZE : DEFAULT_NODE_COUNT);
-    }
-
-    const { steps: newSteps } = config.generator(newData);
-    setSteps(newSteps);
-    setCurrentStepIndex(0);
-  }, [selectedAlgorithmId]);
-
-  // Mantener refs sincronizados con el estado
-  useEffect(() => {
-    currentStepRef.current = currentStepIndex;
-  }, [currentStepIndex]);
-
-  useEffect(() => {
-    stepsRef.current = steps;
-  }, [steps]);
-
-  // ──────────────────────────────
-  // Generar nuevos pasos al cambiar el dato fuente
-  // ──────────────────────────────
-  const regenerate = useCallback((newData) => {
-    stopPlayback();
-    const config = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
-    const { steps: newSteps } = config.generator(newData);
-    setSourceData(newData);
-    setSteps(newSteps);
-    setCurrentStepIndex(0);
-  }, [selectedAlgorithmId]);
-
-  // ──────────────────────────────
-  // Controles de dato
-  // ──────────────────────────────
-  const handleDataSizeChange = useCallback((newSize) => {
-    const config = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
-    const min = config.type === 'array' ? 4 : 4;
-    const max = config.type === 'array' ? 30 : 12;
-    const clamped = Math.max(min, Math.min(max, newSize));
-    setDataSize(clamped);
-    const newData = config.dataGenerator(clamped);
-    regenerate(newData);
-  }, [selectedAlgorithmId, regenerate]);
-
-  const handleRandomize = useCallback(() => {
-    const config = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
-    const newData = config.dataGenerator(dataSize);
-    regenerate(newData);
-  }, [selectedAlgorithmId, dataSize, regenerate]);
 
   // ──────────────────────────────
   // Controles de reproducción
@@ -181,6 +160,78 @@ export default function useVisualizerEngine(selectedAlgorithmId = 'bubble-sort')
     stopPlayback();
     setCurrentStepIndex(0);
   }, [stopPlayback]);
+
+  // Update steps when algorithm changes (and potentially regenerate data if type changed)
+  useEffect(() => {
+    stopPlayback();
+    const config = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
+    
+    // Regenerar datos si el tipo de algoritmo cambió (array ↔ graph ↔ tree)
+    let newData = sourceData;
+    const newType = config.type;
+
+    if (prevTypeRef.current !== newType) {
+      const defaultSize = newType === 'array' ? DEFAULT_ARRAY_SIZE : DEFAULT_NODE_COUNT;
+      newData = config.dataGenerator(defaultSize);
+      setSourceData(newData);
+      setDataSize(defaultSize);
+      prevTypeRef.current = newType;
+    }
+
+    const { steps: newSteps } = config.generator(newData, rootNodeId);
+    setSteps(newSteps);
+    setCurrentStepIndex(0);
+  }, [selectedAlgorithmId, rootNodeId]);
+
+  // Mantener refs sincronizados con el estado
+  useEffect(() => {
+    currentStepRef.current = currentStepIndex;
+  }, [currentStepIndex]);
+
+  useEffect(() => {
+    stepsRef.current = steps;
+  }, [steps]);
+
+  // ──────────────────────────────
+  // Generar nuevos pasos al cambiar el dato fuente
+  // ──────────────────────────────
+  const regenerate = useCallback((newData) => {
+    stopPlayback();
+    const config = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
+    const { steps: newSteps } = config.generator(newData, rootNodeId);
+    setSourceData(newData);
+    setSteps(newSteps);
+    setCurrentStepIndex(0);
+  }, [selectedAlgorithmId, rootNodeId]);
+
+  // ──────────────────────────────
+  // Controles de dato
+  // ──────────────────────────────
+  const handleDataSizeChange = useCallback((newSize) => {
+    const config = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
+    // Rangos específicos según el tipo de algoritmo
+    const ranges = { array: [4, 30], graph: [4, 12], tree: [4, 12], dp: [2, 15] };
+    const [min, max] = ranges[config.type] || [4, 20];
+    const clamped = Math.max(min, Math.min(max, newSize));
+    setDataSize(clamped);
+    const newData = config.dataGenerator(clamped);
+    regenerate(newData);
+  }, [selectedAlgorithmId, regenerate]);
+
+  const handleRandomize = useCallback(() => {
+    const config = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
+    const newData = config.dataGenerator(dataSize);
+    regenerate(newData);
+  }, [selectedAlgorithmId, dataSize, regenerate]);
+
+  const handleRootNodeChange = useCallback((newRootId) => {
+    stopPlayback();
+    const config = ALGORITHM_CONFIG[selectedAlgorithmId] || ALGORITHM_CONFIG['bubble-sort'];
+    setRootNodeId(newRootId);
+    const { steps: newSteps } = config.generator(sourceData, newRootId);
+    setSteps(newSteps);
+    setCurrentStepIndex(0);
+  }, [selectedAlgorithmId, sourceData, stopPlayback]);
 
   // ──────────────────────────────
   // Reiniciar reproducción al cambiar velocidad (si estaba corriendo)
@@ -242,6 +293,7 @@ export default function useVisualizerEngine(selectedAlgorithmId = 'bubble-sort')
     // Datos del dato fuente (array o grafo)
     sourceData,
     dataSize,
+    rootNodeId,
 
     // Acciones
     togglePlayback,
@@ -251,5 +303,6 @@ export default function useVisualizerEngine(selectedAlgorithmId = 'bubble-sort')
     handleSpeedChange,
     handleDataSizeChange,
     handleRandomize,
+    handleRootNodeChange,
   };
 }

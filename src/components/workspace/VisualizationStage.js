@@ -70,7 +70,7 @@ export default function VisualizationStage({
   return (
     <div className="flex-1 relative flex flex-col p-8 overflow-hidden bg-surface">
       {/* Description Tooltip (Fixed Top) */}
-      <div className="flex justify-center mb-8 pr-[360px] z-20">
+      <div className="flex justify-center mb-8 pr-[400px] z-20">
         <div className="glass-panel ghost-border rounded-full px-6 py-2 text-center shadow-lg pointer-events-auto max-w-2xl">
           <span className="font-mono text-xs text-on-surface-variant tracking-wide uppercase">
             {currentStep.description}
@@ -106,7 +106,7 @@ export default function VisualizationStage({
         </div>
 
         {/* Lane reserved for Sidebar Content (Controls + Code) */}
-        <div className="w-[360px] flex-shrink-0 relative flex flex-col gap-4 min-h-0">
+        <div id="sidebar-lane" className="w-[400px] h-full flex-shrink-0 relative flex flex-col gap-4 p-6 overflow-y-auto custom-scrollbar border-l border-slate-800/30 bg-slate-900/10 backdrop-blur-md">
           {/* Controls Area (Sidebar Integrated) */}
           <div className="glass-panel ghost-border rounded-xl p-4 shadow-xl flex flex-col gap-4 shrink-0">
             <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-800/50 pb-2 flex items-center gap-2">

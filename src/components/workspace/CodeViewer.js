@@ -11,28 +11,28 @@ import React from 'react';
  */
 export default function CodeViewer({ activeLine, isPlaying, code = [] }) {
   return (
-    <div className="flex-1 min-h-0 glass-panel rounded-2xl ghost-border p-6 shadow-xl backdrop-blur-3xl overflow-hidden flex flex-col transition-all duration-300 hover:shadow-cyan-900/10">
-      <div className="flex justify-between items-center mb-6">
+    <div className="flex-1 min-h-[350px] glass-panel rounded-2xl ghost-border p-4 shadow-xl backdrop-blur-3xl flex flex-col transition-all duration-300 hover:shadow-cyan-900/10">
+      <div className="flex justify-between items-center mb-3">
         <div className="text-[10px] font-mono uppercase tracking-widest text-slate-500 font-bold">Live Execution Trace</div>
         <div className="flex items-center gap-2">
           <span className="text-[9px] font-mono text-primary opacity-70">{isPlaying ? 'EXECUTING' : 'PAUSED'}</span>
           <span className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-primary animate-pulse shadow-[0_0_8px_rgba(76,215,246,0.5)]' : 'bg-slate-600'}`}></span>
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-        <div className="font-mono text-xs space-y-1.5 text-slate-400">
+      <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar">
+        <div className="font-mono text-[11px] leading-relaxed space-y-0.5 text-slate-400">
           {code.map(({ line, text }) => {
             const isActive = line === activeLine;
 
             return (
               <div
                 key={line}
-                className={`flex gap-4 transition-all duration-200 ${
+                className={`flex gap-3 transition-all duration-200 ${
                   isActive
-                    ? 'bg-secondary-container/40 -mx-6 px-6 py-0.5 text-secondary-fixed border-l-2 border-secondary'
+                    ? 'bg-secondary-container/40 -mx-4 px-4 py-0.5 text-secondary-fixed border-l-2 border-secondary'
                     : isLineBeforeActive(line, activeLine)
                       ? 'opacity-50'
-                      : ''
+                      : 'py-0.5'
                 }`}
               >
                 <span className="w-5 text-right opacity-50 select-none flex-shrink-0">{line}</span>

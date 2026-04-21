@@ -1,70 +1,93 @@
-# Getting Started with Create React App
+# 💠 Kinetic Blueprint | Algorithm Visualizer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Kinetic Blueprint** is a premium, high-performance algorithm visualization platform designed for clarity, aesthetics, and deep technical understanding. Built with a modern glassmorphism design system, it allows users to monitor complex execution states, traversal paths, and real-time code execution across various data structures.
 
-## Available Scripts
+![Header Preview](https://img.shields.io/badge/Design-Glassmorphism-4CD7F6?style=for-the-badge)
+![Tech Stack](https://img.shields.io/badge/Stack-React%20%7C%20Vanilla%20CSS-61DAFB?style=for-the-badge)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## ✨ Key Features
 
-Runs the app in the development mode.\
+- **🚀 Real-Time Execution Trace**: See exactly which line of pseudocode is running with synchronized highlighting.
+- **📊 Persistent Monitoring**: Critical data structures like **Call Stacks**, **Traversal Queues**, and **Pending Insertions** are pinned to the header for real-time tracking.
+- **💎 Premium Aesthetics**: A sleek "Blueprint" interface featuring vibrant glow effects, smooth transitions, and glassmorphic panels.
+- **📐 Specialized Viewports**: 
+  - **Graph Stage**: Dynamic force-directed-like layouts for BFS/DFS.
+  - **Tree Stage**: Hierarchical layouts with insertion animations for BST.
+  - **DP Stage**: Tabulation grid with dependency arrows for Dynamic Programming.
+- **⚙️ Complete Control**: Adjust execution speed (0.5x to 4x), step forward/backward, and randomize input data.
+
+---
+
+## 📚 Supported Algorithms
+
+### 📊 Sorting
+- **Bubble Sort**: The classic swap-based sorting.
+- **Selection Sort**: Finding minimums and placing them in order.
+- **Insertion Sort**: Building a sorted array one element at a time.
+
+### 🕸️ Graphs
+- **Breadth-First Search (BFS)**: Level-order traversal using a queue.
+- **Depth-First Search (DFS)**: Exhaustive path searching using a stack.
+
+### 🌳 Trees
+- **BST Insert**: Visualizing the recursive placement of nodes in a Binary Search Tree.
+
+### ⚡ Dynamic Programming
+- **Fibonacci**: Visualizing the bottom-up tabulation process with dependency tracking.
+
+---
+
+## 🛠️ Technology Stack
+
+- **Core**: React 18+
+- **Styling**: Vanilla CSS with CSS Variables (Blueprint Design System)
+- **Icons**: Google Material Symbols
+- **Visuals**: SVG-based rendering with CSS-in-JS transitions
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/HongQuan78/Visualizer.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd Visualizer
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Running Locally
+Start the development server:
+```bash
+npm start
+```
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 🎨 Design Philosophy
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+> **"Readability and Order > Speed and Complex Interconnections"**
 
-### `npm run build`
+Kinetic Blueprint focuses on making the abstract concrete. By combining high-fidelity animations with persistent state monitoring, we eliminate the need for "mental mapping," allowing students and engineers to focus entirely on the logic of the algorithm.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 📜 License
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+*Engineered for clarity. Designed for the curious.*

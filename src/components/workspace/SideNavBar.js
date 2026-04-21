@@ -17,6 +17,7 @@ export default function SideNavBar({
   selectedAlgorithm = 'bubble-sort',
   onAlgorithmChange,
   algorithmMeta,
+  algoType = 'array',
 }) {
   // Controla qué categoría está expandida en el acordeón
   const [expandedCategory, setExpandedCategory] = useState(algorithmMeta?.category || 'Sorting');
@@ -130,13 +131,15 @@ export default function SideNavBar({
             {/* Dato fuente */}
             <div>
               <label className="text-[10px] text-on-surface-variant mb-1.5 block">
-                {Array.isArray(sourceData) ? 'Source Array' : 'Source Graph'}
+                {algoType === 'dp' ? 'Target N' : Array.isArray(sourceData) ? 'Source Array' : 'Source Graph'}
               </label>
               <div className="bg-surface-container-lowest p-2.5 rounded-lg ghost-border overflow-x-auto">
                 <code className="font-mono text-[11px] text-primary whitespace-nowrap">
-                  {Array.isArray(sourceData) 
-                    ? `[${sourceData.join(', ')}]` 
-                    : `Nodes: ${sourceData.nodes.length}, Edges: ${Object.values(sourceData.adjList).flat().length / 2}`
+                  {algoType === 'dp'
+                    ? `N = ${sourceData}`
+                    : Array.isArray(sourceData) 
+                      ? `[${sourceData.join(', ')}]` 
+                      : `Nodes: ${sourceData?.nodes?.length || 0}, Edges: ${Math.floor((Object.values(sourceData?.adjList || {}).flat().length) / 2)}`
                   }
                 </code>
               </div>
@@ -146,15 +149,15 @@ export default function SideNavBar({
             <div>
               <div className="flex justify-between mb-1.5">
                 <label className="text-[10px] text-on-surface-variant">
-                  {Array.isArray(sourceData) ? 'Array Size' : 'Node Count'}
+                  {algoType === 'dp' ? 'Target N' : algoType === 'array' ? 'Array Size' : 'Node Count'}
                 </label>
                 <span className="font-mono text-[10px] text-primary font-bold">{dataSize}</span>
               </div>
               <input
                 className="w-full h-1 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary"
                 type="range"
-                min="4"
-                max={Array.isArray(sourceData) ? 30 : 12}
+                min={algoType === 'dp' ? 2 : 4}
+                max={algoType === 'array' ? 30 : algoType === 'dp' ? 15 : 12}
                 value={dataSize}
                 onChange={(e) => onDataSizeChange(Number(e.target.value))}
               />
@@ -186,17 +189,17 @@ export default function SideNavBar({
         {/* ─── Estado de ejecución ─── */}
         <div className="px-6 pb-6">
           <label className="font-mono text-[10px] uppercase tracking-widest text-slate-500 block mb-4">Execution State</label>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-surface-container-low p-4 rounded-xl ghost-border flex flex-col justify-center">
+          <div className="grid grid-cols-[3fr_2fr] gap-2">
+            <div className="bg-surface-container-low p-3 rounded-xl ghost-border flex flex-col justify-center">
               <div className="text-[9px] text-slate-500 mb-2 uppercase tracking-widest font-bold">Complexity</div>
               <div className="flex flex-col gap-1">
-                <div className="flex justify-between items-baseline">
-                  <span className="text-[8px] font-mono text-slate-500 uppercase">Time</span>
-                  <span className="font-mono text-xs font-bold text-primary">{algorithmMeta?.timeComplexity}</span>
+                <div className="flex justify-between items-baseline gap-1">
+                  <span className="text-[8px] font-mono text-slate-500 uppercase shrink-0">Time</span>
+                  <span className="font-mono text-[9px] font-bold text-primary">{algorithmMeta?.timeComplexity}</span>
                 </div>
-                <div className="flex justify-between items-baseline">
-                  <span className="text-[8px] font-mono text-slate-500 uppercase">Space</span>
-                  <span className="font-mono text-xs font-bold text-secondary">{algorithmMeta?.spaceComplexity}</span>
+                <div className="flex justify-between items-baseline gap-1">
+                  <span className="text-[8px] font-mono text-slate-500 uppercase shrink-0">Space</span>
+                  <span className="font-mono text-[9px] font-bold text-secondary">{algorithmMeta?.spaceComplexity}</span>
                 </div>
               </div>
             </div>
