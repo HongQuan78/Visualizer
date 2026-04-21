@@ -1,13 +1,18 @@
 import React from 'react';
 
 const NAV_LINKS = [
-  { label: 'Gallery' },
+  { label: 'Gallery', action: 'home' },
   { label: 'Workspace', active: true },
   { label: 'Library', action: 'library' },
   { label: 'Benchmarks' },
 ];
 
 export default function TopNavBar({ onNavigateHome, onNavigateLibrary }) {
+  const handleNavClick = (action) => {
+    if (action === 'home') onNavigateHome();
+    if (action === 'library') onNavigateLibrary();
+  };
+
   return (
     <header className="w-full sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl shadow-2xl shadow-cyan-900/10">
       <div className="flex items-center justify-between px-8 py-4 w-full max-w-screen-2xl mx-auto">
@@ -16,7 +21,7 @@ export default function TopNavBar({ onNavigateHome, onNavigateLibrary }) {
           {NAV_LINKS.map((link) => (
             <button
               key={link.label}
-              onClick={() => link.action === 'library' && onNavigateLibrary()}
+              onClick={() => handleNavClick(link.action)}
               className={`transition-all duration-200 active:scale-95 bg-transparent border-none cursor-pointer ${
                 link.active 
                   ? 'text-cyan-400 border-b-2 border-cyan-400 pb-1' 
