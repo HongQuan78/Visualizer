@@ -1,0 +1,29 @@
+name: Validate Pipeline
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify permissions are minimal
+        run: |
+          grep -q "^permissions:" .github/workflows/ci-cd.yml || {
+            echo "ERROR: Workflow must have explicit permissions"
+            exit 1
+          }
+
+      - name: Verify build depends on security
+        run: |
+          grep -A 10 "build:" .github/workflows/ci-cd.yml | grep -q "needs:.*security" || {
+            echo "ERROR: Build job must depend on security scans"
+            exit 1
+          }

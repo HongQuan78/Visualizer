@@ -6,6 +6,7 @@ import Footer from '../workspace/Footer';
 
 export default function CommunityLibrary({ onNavigateHome, onNavigateWorkspace }) {
   const [activeCategory, setActiveCategory] = useState('All Streams');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-on-background">
@@ -13,9 +14,16 @@ export default function CommunityLibrary({ onNavigateHome, onNavigateWorkspace }
         onNavigateHome={onNavigateHome} 
         activeCategory={activeCategory}
         onCategoryChange={setActiveCategory}
+        isOpen={isSidebarOpen}
+        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
       />
-      <main className="ml-64 flex flex-col min-h-screen">
-        <LibraryTopNav onNavigateHome={onNavigateHome} onNavigateWorkspace={onNavigateWorkspace} />
+      <main className={`${isSidebarOpen ? 'ml-64' : 'ml-20'} flex flex-col min-h-screen transition-all duration-300`}>
+        <LibraryTopNav 
+          onNavigateHome={onNavigateHome} 
+          onNavigateWorkspace={onNavigateWorkspace}
+          isSidebarOpen={isSidebarOpen}
+          onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        />
         <LibraryGallery activeCategory={activeCategory} onCategoryChange={setActiveCategory} />
         <Footer />
       </main>
