@@ -26,7 +26,7 @@ export default function LibraryTopNav({ onNavigateHome, onNavigateWorkspace, isS
             className="text-2xl font-black tracking-tighter text-cyan-400 cursor-pointer" 
             onClick={onNavigateHome}
           >
-            Kinetic Blueprint
+            AlgoForge
           </span>
         </div>
 

@@ -16,7 +16,7 @@ export default function Header({ onNavigateWorkspace, onNavigateLibrary }) {
   return (
     <header className="w-full sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl shadow-2xl shadow-cyan-900/10">
       <div className="flex items-center justify-between px-8 py-4 w-full max-w-screen-2xl mx-auto">
-        <div className="text-2xl font-black tracking-tighter text-cyan-400">Kinetic Blueprint</div>
+        <div className="text-2xl font-black tracking-tighter text-cyan-400">AlgoForge</div>
         <nav className="hidden md:flex items-center gap-6 font-sans text-sm tracking-wide">
           {NAV_LINKS.map((link) => (
             <button

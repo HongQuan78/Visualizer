@@ -6,6 +6,11 @@
       "sourceType": "github",
       "computedHash": "2a51008550e58b079b38dbbbf91bb3c45945a5b2d7f3ec638b34104694c7b715"
     },
+    "netlify-cli-and-deploy": {
+      "source": "netlify/context-and-tools",
+      "sourceType": "github",
+      "computedHash": "da8d047061a0d94a58a6426591d28257f2951f15b56dcf1e571c38c3d54ddb60"
+    },
     "vercel-react-best-practices": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",

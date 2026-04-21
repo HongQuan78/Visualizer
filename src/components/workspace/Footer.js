@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="w-full py-6 border-t border-slate-900 bg-slate-950 z-20">
       <div className="flex flex-col md:flex-row justify-between items-center px-12 w-full gap-8">
-        <div className="text-slate-200 font-bold text-[10px] uppercase tracking-[0.1em]">© 2024 KINETIC BLUEPRINT. ENGINEERED FOR CLARITY.</div>
+        <div className="text-slate-200 font-bold text-[10px] uppercase tracking-[0.1em]">© 2024 ALGOFORGE. ENGINEERED FOR CLARITY.</div>
         <div className="flex gap-8 items-center font-mono text-[10px] uppercase tracking-[0.1em]">
           {['Architecture', 'Privacy', 'Open Source', 'API'].map((link) => (
             <button key={link} className={`transition-opacity duration-200 bg-transparent border-none cursor-pointer ${link === 'API' ? 'text-cyan-400' : 'text-slate-500 hover:text-cyan-300'}`}>

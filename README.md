@@ -1,6 +1,6 @@
-# 💠 Kinetic Blueprint | Algorithm Visualizer
+# 💠 AlgoForge | Algorithm Visualizer
 
-**Kinetic Blueprint** is a premium, high-performance algorithm visualization platform designed for clarity, aesthetics, and deep technical understanding. Built with a modern glassmorphism design system, it allows users to monitor complex execution states, traversal paths, and real-time code execution across various data structures.
+**AlgoForge** is a premium, high-performance algorithm visualization platform designed for clarity, aesthetics, and deep technical understanding. Built with a modern glassmorphism design system, it allows users to monitor complex execution states, traversal paths, and real-time code execution across various data structures.
 
 ![Header Preview](https://img.shields.io/badge/Design-Glassmorphism-4CD7F6?style=for-the-badge)
 ![Tech Stack](https://img.shields.io/badge/Stack-React%20%7C%20Vanilla%20CSS-61DAFB?style=for-the-badge)
@@ -82,7 +82,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 > **"Readability and Order > Speed and Complex Interconnections"**
 
-Kinetic Blueprint focuses on making the abstract concrete. By combining high-fidelity animations with persistent state monitoring, we eliminate the need for "mental mapping," allowing students and engineers to focus entirely on the logic of the algorithm.
+AlgoForge focuses on making the abstract concrete. By combining high-fidelity animations with persistent state monitoring, we eliminate the need for "mental mapping," allowing students and engineers to focus entirely on the logic of the algorithm.
 
 ---
 

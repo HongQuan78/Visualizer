@@ -35,7 +35,7 @@ code {
     background: radial-gradient(circle at center, #131b2e 0%, #060e20 100%);
 }
 
-/* ─── Scrollbar personalizado (Kinetic Blueprint) ─── */
+/* ─── Scrollbar personalizado (AlgoForge) ─── */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
