@@ -67,22 +67,22 @@ export default function VisualizationStage({
   }
 
   return (
-    <div className="flex-1 relative flex flex-col p-8 overflow-hidden bg-surface">
+    <div className="flex-1 relative flex flex-col p-4 md:p-8 overflow-hidden bg-surface">
       {/* Description Tooltip (Fixed Top) */}
-      <div className="flex justify-center mb-8 pr-[400px] z-20">
-        <div className="glass-panel ghost-border rounded-full px-6 py-2 text-center shadow-lg pointer-events-auto max-w-2xl">
-          <span className="font-mono text-xs text-on-surface-variant tracking-wide uppercase">
+      <div className="flex justify-center mb-4 md:mb-8 lg:pr-[400px] z-20">
+        <div className="glass-panel ghost-border rounded-full px-4 md:px-6 py-2 text-center shadow-lg pointer-events-auto max-w-2xl">
+          <span className="font-mono text-[10px] md:text-xs text-on-surface-variant tracking-wide uppercase">
             {currentStep.description}
           </span>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 relative flex overflow-hidden">
+      <div className="flex-1 relative flex flex-col lg:flex-row overflow-hidden lg:overflow-visible overflow-y-auto lg:overflow-y-hidden">
         {/* Bars Container */}
-        <div className="flex-1 flex flex-col justify-center overflow-hidden py-8">
+        <div className="flex-1 flex flex-col justify-center overflow-hidden py-4 md:py-8 min-h-[300px] lg:min-h-0">
           {/* Main Array */}
-          <div className="flex-1 flex items-end justify-center gap-3 px-4 transition-all duration-500 min-h-[50%]">
+          <div className="flex-1 flex items-end justify-center gap-1 md:gap-3 px-2 md:px-4 transition-all duration-500 min-h-[50%]">
             {array.map((value, index) => {
               const heightPercent = (value / maxVal) * 85 + 5;
               const barStyle = getBarStyle(index);
@@ -98,7 +98,7 @@ export default function VisualizationStage({
                     transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
                   }}
                 >
-                  <span className="font-mono text-[10px] text-on-surface mb-2 opacity-80 select-none">
+                  <span className="font-mono text-[8px] md:text-[10px] text-on-surface mb-2 opacity-80 select-none">
                     {value}
                   </span>
                 </div>
@@ -108,7 +108,7 @@ export default function VisualizationStage({
 
           {/* Temp Array (Merge Sort) */}
           {tempArray && (
-            <div className="flex-1 flex items-end justify-center gap-3 px-4 mt-8 pt-8 border-t border-slate-800/50 min-h-[40%]">
+            <div className="flex-1 flex items-end justify-center gap-1 md:gap-3 px-2 md:px-4 mt-4 md:mt-8 pt-4 md:pt-8 border-t border-slate-800/50 min-h-[40%]">
               {/* Spacer blocks for offset */}
               {Array.from({ length: tempOffset }).map((_, index) => (
                 <div key={`spacer-${index}`} className="flex-1 max-w-[60px]" />
@@ -130,7 +130,7 @@ export default function VisualizationStage({
                       transitionDuration: '400ms',
                     }}
                   >
-                    <span className="font-mono text-[10px] text-on-surface mb-2 opacity-80 select-none">
+                    <span className="font-mono text-[8px] md:text-[10px] text-on-surface mb-2 opacity-80 select-none">
                       {value}
                     </span>
                   </div>
@@ -146,7 +146,7 @@ export default function VisualizationStage({
         </div>
 
         {/* Lane reserved for Sidebar Content (Controls + Code) */}
-        <div id="sidebar-lane" className="w-[400px] h-full flex-shrink-0 relative flex flex-col gap-4 p-6 overflow-y-auto custom-scrollbar border-l border-slate-800/30 bg-slate-900/10 backdrop-blur-md">
+        <div id="sidebar-lane" className="w-full lg:w-[400px] h-auto lg:h-full flex-shrink-0 relative flex flex-col gap-4 p-4 md:p-6 overflow-y-visible lg:overflow-y-auto custom-scrollbar border-t lg:border-t-0 lg:border-l border-slate-800/30 bg-slate-900/10 backdrop-blur-md">
           {/* Controls Area (Sidebar Integrated) */}
           <div className="glass-panel ghost-border rounded-xl p-4 shadow-xl flex flex-col gap-4 shrink-0">
             <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-800/50 pb-2 flex items-center gap-2">

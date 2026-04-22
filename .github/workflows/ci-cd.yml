@@ -80,23 +80,5 @@ jobs:
           path: build/
           retention-days: 7
 
-  # Stage 4: Deploy
-  deploy:
-    name: Deploy to Netlify
-    needs: [build]
-    if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output
-          path: build/
-      - name: Deploy to Netlify
-        run: npx netlify-cli deploy --prod --dir=build
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
 

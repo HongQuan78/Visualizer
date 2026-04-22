@@ -26,7 +26,7 @@ export default function SideNavBar({
   }
 
   return (
-    <aside className="h-full w-72 bg-slate-950 flex flex-col border-r border-slate-800/50 z-20">
+    <aside className="h-full w-[85vw] max-w-sm md:w-72 bg-slate-950 flex flex-col border-r border-slate-800/50 z-20">
       {/* Branding */}
       <div className="p-5 flex items-center gap-3 border-b border-slate-800/50">
         <div className="w-9 h-9 rounded-lg bg-surface-container-highest flex items-center justify-center ghost-border">

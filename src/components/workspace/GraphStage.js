@@ -48,27 +48,28 @@ export default function GraphStage({
   });
 
   return (
-    <div className="flex-1 relative flex flex-col p-8 overflow-hidden bg-surface">
+    <div className="flex-1 relative flex flex-col p-4 md:p-8 overflow-hidden bg-surface">
       {/* Blueprint Grid Background */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
            style={{ backgroundImage: 'linear-gradient(#4CD7F6 1px, transparent 1px), linear-gradient(90deg, #4CD7F6 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
       </div>
 
       {/* Description Tooltip (Fixed Top) */}
-      <div className="flex justify-center mb-8 pr-[400px] z-20 pt-16">
-        <div className="glass-panel ghost-border rounded-full px-6 py-2 text-center shadow-lg pointer-events-auto max-w-2xl">
-          <span className="font-mono text-xs text-on-surface-variant tracking-wide uppercase">
+      <div className="flex justify-center mb-4 md:mb-8 lg:pr-[400px] z-20 pt-4 md:pt-16">
+        <div className="glass-panel ghost-border rounded-full px-4 md:px-6 py-2 text-center shadow-lg pointer-events-auto max-w-2xl">
+          <span className="font-mono text-[10px] md:text-xs text-on-surface-variant tracking-wide uppercase">
             {currentStep.description}
           </span>
         </div>
       </div>
 
       {/* Main Content Area: Graph + Sidebar Lane */}
-      <div className="flex-1 relative flex overflow-hidden">
+      <div className="flex-1 relative flex flex-col lg:flex-row overflow-hidden lg:overflow-visible overflow-y-auto lg:overflow-y-hidden">
         {/* Graph Area */}
-        <div className="flex-1 relative mb-6 flex flex-col min-h-0">
-          <div className="flex-1 relative min-h-0 flex items-center justify-center p-4">
-            <svg viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet" className="w-full h-full max-h-[100%] drop-shadow-2xl">
+        <div className="flex-1 relative mb-6 flex flex-col min-h-[450px] lg:min-h-0">
+          <div className="flex-1 relative min-h-0 overflow-auto custom-scrollbar flex items-center justify-center p-2 md:p-4">
+            <div className="w-full h-full min-w-[800px] md:min-w-0 flex items-center justify-center">
+              <svg viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet" className="w-full h-full max-h-[100%] drop-shadow-2xl">
               <defs>
                 <filter id="glow">
                   <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
@@ -202,11 +203,12 @@ export default function GraphStage({
                 );
               })}
             </svg>
+            </div>
           </div>
         </div>
 
         {/* Lane reserved for Sidebar Content (Controls + Code) */}
-        <div id="sidebar-lane" className="w-[400px] h-full flex-shrink-0 relative flex flex-col gap-3 px-4 py-2 overflow-y-auto custom-scrollbar border-l border-slate-800/30 bg-slate-900/10 backdrop-blur-md">
+        <div id="sidebar-lane" className="w-full lg:w-[400px] h-auto lg:h-full flex-shrink-0 relative flex flex-col gap-3 p-4 md:px-4 md:py-2 overflow-y-visible lg:overflow-y-auto custom-scrollbar border-t lg:border-t-0 lg:border-l border-slate-800/30 bg-slate-900/10 backdrop-blur-md">
           {/* Controls Area (Sidebar Integrated) */}
           <div className="glass-panel ghost-border rounded-xl p-3 shadow-xl flex flex-col gap-3 shrink-0">
             <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-800/50 pb-1 flex items-center gap-2">

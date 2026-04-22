@@ -23,9 +23,9 @@ export default function VisualizationHeader({
   const dataStructureEmptyMsg = isDFS ? 'Stack is empty' : 'Queue is empty';
 
   return (
-    <div className="px-12 pt-4 pb-1 flex justify-between items-end relative">
-      <div>
-        <h1 className="text-3xl font-extrabold tracking-tighter leading-none mb-0.5">
+    <div className="px-4 lg:px-12 pt-4 pb-1 flex flex-col lg:flex-row justify-between items-start lg:items-end relative gap-3 lg:gap-0">
+      <div className="w-full lg:w-auto">
+        <h1 className="text-2xl lg:text-3xl font-extrabold tracking-tighter leading-tight mb-2 lg:mb-0.5">
           {name}
         </h1>
         <div className="flex gap-4 items-center">
@@ -44,7 +44,7 @@ export default function VisualizationHeader({
         </div>
       </div>
 
-      <div className="flex gap-8 mb-1">
+      <div className="flex gap-4 md:gap-8 mb-1 w-full lg:w-auto justify-start lg:justify-end">
         <div className="text-right">
           <div className="text-[8px] font-mono text-slate-500 uppercase tracking-widest mb-0.5 opacity-70">Time complexity</div>
           <div className="text-xs font-bold font-mono text-primary tracking-tight">{timeComplexity}</div>
@@ -56,8 +56,8 @@ export default function VisualizationHeader({
       </div>
 
       {/* Panel flotante para algoritmos de grafos: Stack/Queue + Start Node */}
-      {isGraph && (
-        <div className="absolute left-12 top-full mt-2 flex gap-6 z-30">
+      {isGraph ? (
+        <div className="relative lg:absolute left-0 lg:left-12 lg:top-full mt-2 flex flex-col md:flex-row gap-2 md:gap-6 z-10 w-full lg:w-auto">
           <div className="flex items-center gap-3 glass-panel ghost-border rounded-lg px-3 py-1.5 shadow-md">
             <div className="flex items-center gap-1.5 border-r border-slate-700/50 pr-3">
               <span className="material-symbols-outlined text-[14px] text-slate-400">{dataStructureIcon}</span>
@@ -99,11 +99,11 @@ export default function VisualizationHeader({
             </div>
           </div>
         </div>
-      )}
+      ) : null}
 
       {/* Panel flotante para árboles: valores pendientes de inserción */}
-      {isTree && (
-        <div className="absolute left-12 top-full mt-2 flex gap-6 z-30">
+      {isTree ? (
+        <div className="relative lg:absolute left-0 lg:left-12 lg:top-full mt-2 flex gap-6 z-10 w-full lg:w-auto">
           <div className="flex items-center gap-3 glass-panel ghost-border rounded-lg px-3 py-1.5 shadow-md">
             <div className="flex items-center gap-1.5 border-r border-slate-700/50 pr-3">
               <span className="material-symbols-outlined text-[14px] text-slate-400">queue</span>
@@ -126,7 +126,7 @@ export default function VisualizationHeader({
             </div>
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

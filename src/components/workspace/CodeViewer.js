@@ -11,7 +11,7 @@ import React from 'react';
  */
 export default function CodeViewer({ activeLine, isPlaying, code = [] }) {
   return (
-    <div className="flex-1 min-h-[350px] glass-panel rounded-2xl ghost-border p-4 shadow-xl backdrop-blur-3xl flex flex-col transition-all duration-300 hover:shadow-cyan-900/10">
+    <div className="flex-1 min-h-[200px] md:min-h-[350px] max-h-[300px] md:max-h-none glass-panel rounded-2xl ghost-border p-4 shadow-xl backdrop-blur-3xl flex flex-col transition-all duration-300 hover:shadow-cyan-900/10">
       <div className="flex justify-between items-center mb-3">
         <div className="text-[10px] font-mono uppercase tracking-widest text-slate-500 font-bold">Live Execution Trace</div>
         <div className="flex items-center gap-2">

@@ -11,6 +11,7 @@ import useVisualizerEngine from './hooks/useVisualizerEngine';
 
 export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubble-sort');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const engine = useVisualizerEngine(selectedAlgorithm);
   const meta = engine.currentAlgoConfig.meta;
   const isGraph = engine.currentAlgoConfig.type === 'graph';
@@ -19,22 +20,39 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
 
   return (
     <div className="overflow-hidden h-screen flex flex-col">
-      <TopNavBar onNavigateHome={onNavigateHome} onNavigateLibrary={onNavigateLibrary} />
+      <TopNavBar 
+        onNavigateHome={onNavigateHome} 
+        onNavigateLibrary={onNavigateLibrary} 
+        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+      />
       
-      <div className="flex flex-1 overflow-hidden">
-        <SideNavBar
-          sourceData={engine.sourceData}
-          dataSize={engine.dataSize}
-          currentStepIndex={engine.currentStepIndex}
-          totalSteps={engine.totalSteps}
-          onDataSizeChange={engine.handleDataSizeChange}
-          onRandomize={engine.handleRandomize}
-          onReset={engine.reset}
-          selectedAlgorithm={selectedAlgorithm}
-          onAlgorithmChange={setSelectedAlgorithm}
-          algorithmMeta={meta}
-          algoType={engine.currentAlgoConfig.type}
-        />
+      <div className="flex flex-1 overflow-hidden relative">
+        <div className={`absolute inset-y-0 left-0 z-40 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 transition-transform duration-300 ease-in-out`}>
+          <SideNavBar
+            sourceData={engine.sourceData}
+            dataSize={engine.dataSize}
+            currentStepIndex={engine.currentStepIndex}
+            totalSteps={engine.totalSteps}
+            onDataSizeChange={engine.handleDataSizeChange}
+            onRandomize={engine.handleRandomize}
+            onReset={engine.reset}
+            selectedAlgorithm={selectedAlgorithm}
+            onAlgorithmChange={(algo) => {
+              setSelectedAlgorithm(algo);
+              setIsSidebarOpen(false); // Close sidebar on selection mobile
+            }}
+            algorithmMeta={meta}
+            algoType={engine.currentAlgoConfig.type}
+          />
+        </div>
+
+        {/* Overlay for mobile when sidebar is open */}
+        {isSidebarOpen ? (
+          <div 
+            className="absolute inset-0 bg-black/50 z-20 md:hidden" 
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        ) : null}
         
         <main className="flex-1 flex flex-col bg-surface relative overflow-hidden">
           <VisualizationHeader 
