@@ -114,7 +114,7 @@ export default function TreeStage({
                 const dx = toNode.x - fromNode.x;
                 const dy = toNode.y - fromNode.y;
                 const len = Math.sqrt(dx * dx + dy * dy);
-                const nodeRadius = 22;
+                const nodeRadius = 30;
                 const shortenRatio = nodeRadius / len;
 
                 const x1 = fromNode.x + dx * (shortenRatio * 0.5);
@@ -162,16 +162,16 @@ export default function TreeStage({
                   <g key={node.id} className="transition-all duration-500 ease-out">
                     {/* Efecto de pulso para nodo recién insertado */}
                     {isNew && (
-                      <circle cx={node.x} cy={node.y} r={22} fill="none" stroke="#34d399" strokeWidth="2" className="opacity-40">
-                        <animate attributeName="r" from="22" to="40" dur="1.2s" repeatCount="indefinite" />
+                      <circle cx={node.x} cy={node.y} r={30} fill="none" stroke="#34d399" strokeWidth="2" className="opacity-40">
+                        <animate attributeName="r" from="30" to="50" dur="1.2s" repeatCount="indefinite" />
                         <animate attributeName="opacity" from="0.6" to="0" dur="1.2s" repeatCount="indefinite" />
                       </circle>
                     )}
 
                     {/* Efecto de pulso para nodo activo */}
                     {isActive && !isNew && (
-                      <circle cx={node.x} cy={node.y} r={22} fill="none" stroke="var(--color-primary)" strokeWidth="2" className="opacity-40">
-                        <animate attributeName="r" from="22" to="36" dur="1.5s" repeatCount="indefinite" />
+                      <circle cx={node.x} cy={node.y} r={30} fill="none" stroke="var(--color-primary)" strokeWidth="2" className="opacity-40">
+                        <animate attributeName="r" from="30" to="46" dur="1.5s" repeatCount="indefinite" />
                         <animate attributeName="opacity" from="0.6" to="0" dur="1.5s" repeatCount="indefinite" />
                       </circle>
                     )}
@@ -180,7 +180,7 @@ export default function TreeStage({
                     <circle
                       cx={node.x}
                       cy={node.y}
-                      r={22}
+                      r={30}
                       className={`
                         transition-all duration-300
                         ${isNew
@@ -203,7 +203,7 @@ export default function TreeStage({
                       textAnchor="middle"
                       dy=".35em"
                       fill={isNew || isActive || isComparing ? 'black' : 'white'}
-                      className={`font-mono text-sm font-black select-none pointer-events-none ${isNew ? '' : isActive ? '' : 'opacity-90'}`}
+                      className={`font-mono text-base font-black select-none pointer-events-none ${isNew ? '' : isActive ? '' : 'opacity-90'}`}
                     >
                       {node.id}
                     </text>

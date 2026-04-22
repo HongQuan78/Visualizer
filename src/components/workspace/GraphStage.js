@@ -137,13 +137,13 @@ export default function GraphStage({
                       <circle
                         cx={node.x}
                         cy={node.y}
-                        r={24}
+                        r={32}
                         fill="none"
                         stroke="var(--color-primary)"
                         strokeWidth="2"
                         className="opacity-40"
                       >
-                        <animate attributeName="r" from="20" to="35" dur="1.5s" repeatCount="indefinite" />
+                        <animate attributeName="r" from="28" to="45" dur="1.5s" repeatCount="indefinite" />
                         <animate attributeName="opacity" from="0.6" to="0" dur="1.5s" repeatCount="indefinite" />
                       </circle>
                     )}
@@ -153,7 +153,7 @@ export default function GraphStage({
                       <circle
                         cx={node.x}
                         cy={node.y}
-                        r={23}
+                        r={31}
                         fill="none"
                         stroke="var(--color-primary)"
                         strokeWidth="1.5"
@@ -165,7 +165,7 @@ export default function GraphStage({
                     <circle
                       cx={node.x}
                       cy={node.y}
-                      r={20}
+                      r={28}
                       className={`
                         cursor-pointer transition-all duration-300
                         ${isActive ? 'fill-primary stroke-white stroke-2 shadow-[0_0_15px_rgba(76,215,246,0.6)]' : 
@@ -179,10 +179,10 @@ export default function GraphStage({
                     
                     {/* Root Badge */}
                     {isRoot && (
-                      <g transform={`translate(${node.x + 14}, ${node.y - 14})`}>
-                        <circle r="7" className="fill-primary shadow-lg" />
+                      <g transform={`translate(${node.x + 20}, ${node.y - 20})`}>
+                        <circle r="8" className="fill-primary shadow-lg" />
                         <text 
-                          className="font-mono text-[8px] fill-black font-black text-center" 
+                          className="font-mono text-[9px] fill-black font-black text-center" 
                           textAnchor="middle" 
                           dy=".3em"
                         >R</text>
@@ -193,9 +193,9 @@ export default function GraphStage({
                       x={node.x}
                       y={node.y}
                       textAnchor="middle"
-                      dy=".3em"
+                      dy=".35em"
                       fill={isActive || isComparing ? 'black' : (isVisited ? 'white' : 'white')}
-                      className={`font-mono text-sm font-black select-none pointer-events-none ${isVisited ? 'opacity-90' : 'opacity-100'}`}
+                      className={`font-mono text-base font-black select-none pointer-events-none ${isVisited ? 'opacity-90' : 'opacity-100'}`}
                     >
                       {node.id}
                     </text>
