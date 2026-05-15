@@ -1,38 +1,168 @@
-.App {
-  text-align: center;
+* {
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+.workspace-shell {
+  height: 100vh;
+  height: 100dvh;
+}
+
+.workspace-sidebar-shell {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  z-index: 40;
+  transform: translateX(0);
+  transition:
+    transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 220ms ease;
+  will-change: transform, opacity;
+}
+
+.workspace-sidebar-shell.is-closed {
+  opacity: 0;
   pointer-events: none;
+  transform: translateX(-100%);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.workspace-sidebar-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: rgb(0 0 0 / 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+
+.workspace-sidebar-overlay.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.graph-stage {
+  --graph-min-block-size: clamp(22rem, 50vh, 36rem);
+}
+
+.graph-step-callout {
+  max-width: min(44rem, calc(100vw - 2rem));
+}
+
+.graph-canvas-wrap {
+  min-height: var(--graph-min-block-size);
+}
+
+.graph-canvas-frame {
+  width: min(100%, calc(var(--graph-min-block-size) * 1.16));
+  height: min(100%, var(--graph-min-block-size));
+  min-height: min(100%, var(--graph-min-block-size));
+  aspect-ratio: 1.16;
+}
+
+.graph-canvas-svg {
+  width: 100%;
+  height: 100%;
+  min-height: 24rem;
+}
+
+.graph-compact-playback {
+  width: min(100%, 42rem);
+  margin-inline: auto;
+}
+
+.graph-details-lane {
+  max-height: clamp(14rem, 30vh, 20rem);
+}
+
+@media (min-width: 1024px) {
+  .graph-stage {
+    --graph-min-block-size: clamp(22rem, 44vh, 34rem);
+  }
+
+  .graph-details-lane {
+    max-height: clamp(12rem, 26vh, 18rem);
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+@media (min-width: 1536px) {
+  .graph-stage {
+    --graph-min-block-size: 100%;
+  }
+
+  .graph-canvas-wrap,
+  .graph-canvas-svg {
+    min-height: 0;
+  }
+
+  .graph-canvas-frame {
+    width: 100%;
+    height: 100%;
+  }
+
+  .graph-details-lane {
+    max-height: none;
+  }
 }
 
-.App-link {
-  color: #61dafb;
+@media (min-width: 768px) {
+  .workspace-sidebar-shell {
+    position: relative;
+    width: 18rem;
+    flex: 0 0 18rem;
+    overflow: hidden;
+    transition:
+      width 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      flex-basis 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 220ms ease;
+  }
+
+  .workspace-sidebar-shell.is-closed {
+    width: 0;
+    flex-basis: 0;
+    opacity: 0;
+    transform: none;
+  }
+
+  .workspace-sidebar-shell.is-open {
+    opacity: 1;
+  }
+
+  .workspace-sidebar-overlay {
+    display: none;
+  }
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@media (prefers-reduced-motion: reduce) {
+  .workspace-sidebar-shell,
+  .workspace-sidebar-overlay {
+    transition-duration: 1ms;
   }
-  to {
-    transform: rotate(360deg);
-  }
+}
+
+.stage-scroll {
+  min-height: 0;
+}
+
+.no-text-overflow {
+  overflow-wrap: anywhere;
 }

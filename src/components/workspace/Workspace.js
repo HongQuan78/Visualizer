@@ -11,7 +11,9 @@ import useVisualizerEngine from './hooks/useVisualizerEngine';
 
 export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubble-sort');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => (
+    typeof window !== 'undefined' ? window.matchMedia('(min-width: 1440px)').matches : true
+  ));
   const engine = useVisualizerEngine(selectedAlgorithm);
   const meta = engine.currentAlgoConfig.meta;
   const isGraph = engine.currentAlgoConfig.type === 'graph';
@@ -19,15 +21,16 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
   const isDP = engine.currentAlgoConfig.type === 'dp';
 
   return (
-    <div className="overflow-hidden h-screen flex flex-col">
+    <div className="overflow-hidden workspace-shell flex flex-col">
       <TopNavBar 
         onNavigateHome={onNavigateHome} 
         onNavigateLibrary={onNavigateLibrary} 
+        isSidebarOpen={isSidebarOpen}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
       />
       
-      <div className="flex flex-1 overflow-hidden relative">
-        <div className={`absolute inset-y-0 left-0 z-40 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 transition-transform duration-300 ease-in-out`}>
+      <div className="flex flex-1 min-h-0 overflow-hidden relative">
+        <div className={`workspace-sidebar-shell ${isSidebarOpen ? 'is-open' : 'is-closed'}`}>
           <SideNavBar
             sourceData={engine.sourceData}
             dataSize={engine.dataSize}
@@ -39,7 +42,9 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
             selectedAlgorithm={selectedAlgorithm}
             onAlgorithmChange={(algo) => {
               setSelectedAlgorithm(algo);
-              setIsSidebarOpen(false); // Close sidebar on selection mobile
+              if (typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches) {
+                setIsSidebarOpen(false);
+              }
             }}
             algorithmMeta={meta}
             algoType={engine.currentAlgoConfig.type}
@@ -47,14 +52,12 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
         </div>
 
         {/* Overlay for mobile when sidebar is open */}
-        {isSidebarOpen ? (
-          <div 
-            className="absolute inset-0 bg-black/50 z-20 md:hidden" 
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        ) : null}
+        <div
+          className={`workspace-sidebar-overlay ${isSidebarOpen ? 'is-visible' : ''}`}
+          onClick={() => setIsSidebarOpen(false)}
+        />
         
-        <main className="flex-1 flex flex-col bg-surface relative overflow-hidden">
+        <main className="flex-1 min-w-0 flex flex-col bg-surface relative overflow-hidden">
           <VisualizationHeader 
             name={meta.name}
             category={meta.category}
@@ -73,7 +76,7 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
             currentInsertValue={engine.currentStep?.currentInsertValue}
           />
 
-          <div className="flex-1 relative flex flex-col overflow-hidden">
+          <div className="flex-1 min-h-0 relative flex flex-col overflow-hidden">
             {isDP ? (
               <DPStage
                 currentStep={engine.currentStep}
