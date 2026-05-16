@@ -15,6 +15,9 @@ export default function VisualizationStage({
   currentStepIndex,
   totalSteps,
   code = [],
+  algorithmType = 'array',
+  algorithmId = 'bubble-sort',
+  learning = null,
 }) {
   // Safety check to prevent crashes during algorithm switching
   if (!currentStep || !currentStep.array) {
@@ -78,6 +81,9 @@ export default function VisualizationStage({
   return (
     <StageShell
       currentStep={currentStep}
+      algorithmType={algorithmType}
+      algorithmId={algorithmId}
+      learning={learning}
       playback={playback}
       code={code}
       badges={currentStep.target !== undefined ? [{ label: `TARGET ${currentStep.target}` }] : []}

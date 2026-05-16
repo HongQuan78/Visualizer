@@ -58,6 +58,7 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
             algoType={engine.currentAlgoConfig.type}
             sizeRange={engine.currentAlgoConfig.size}
             inputConfig={engine.currentAlgoConfig.input}
+            legend={engine.currentAlgoConfig.learning?.legend || []}
           />
         </div>
 
@@ -99,6 +100,9 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
               totalSteps={engine.totalSteps}
               code={engine.currentAlgoConfig.code}
               algoId={selectedAlgorithm}
+              algorithmId={selectedAlgorithm}
+              algorithmType={engine.currentAlgoConfig.type}
+              learning={engine.currentAlgoConfig.learning}
               rootNodeId={engine.rootNodeId}
               onRootNodeChange={engine.handleRootNodeChange}
             />

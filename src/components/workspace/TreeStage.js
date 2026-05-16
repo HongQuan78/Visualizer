@@ -16,6 +16,9 @@ export default function TreeStage({
   currentStepIndex,
   totalSteps,
   code = [],
+  algorithmType = 'tree',
+  algorithmId = 'bst-insert',
+  learning = null,
 }) {
   // Prevenir crashes durante el cambio de algoritmo
   if (!currentStep || !currentStep.tree) {
@@ -64,6 +67,9 @@ export default function TreeStage({
   return (
     <StageShell
       currentStep={currentStep}
+      algorithmType={algorithmType}
+      algorithmId={algorithmId}
+      learning={learning}
       playback={playback}
       code={code}
       showGrid

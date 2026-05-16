@@ -16,6 +16,9 @@ export default function DPStage({
   currentStepIndex,
   totalSteps,
   code = [],
+  algorithmType = 'dp',
+  algorithmId = 'fibonacci',
+  learning = null,
 }) {
   // Prevenir crashes durante el cambio de algoritmo
   if (!currentStep || !currentStep.dpTable) {
@@ -60,6 +63,9 @@ export default function DPStage({
   return (
     <StageShell
       currentStep={currentStep}
+      algorithmType={algorithmType}
+      algorithmId={algorithmId}
+      learning={learning}
       playback={playback}
       code={code}
       showGrid

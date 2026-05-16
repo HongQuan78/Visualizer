@@ -17,6 +17,9 @@ export default function GraphStage({
   totalSteps,
   code = [],
   algoId = 'bfs',
+  algorithmType = 'graph',
+  algorithmId = algoId,
+  learning = null,
   rootNodeId = null,
   onRootNodeChange = () => {},
 }) {
@@ -138,6 +141,9 @@ export default function GraphStage({
   return (
     <StageShell
       currentStep={currentStep}
+      algorithmType={algorithmType}
+      algorithmId={algorithmId}
+      learning={learning}
       playback={playback}
       code={code}
       details={details}

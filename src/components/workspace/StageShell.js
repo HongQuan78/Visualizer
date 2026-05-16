@@ -1,6 +1,8 @@
 import React from 'react';
+import LearningPanel from './LearningPanel';
 import StageDetailsLane from './StageDetailsLane';
 import StepCallout from './StepCallout';
+import { getOperationBadge } from './learningUtils';
 
 export default function StageShell({
   currentStep,
@@ -10,6 +12,9 @@ export default function StageShell({
   details = null,
   subheader = null,
   badges = [],
+  algorithmType,
+  algorithmId,
+  learning,
   showGrid = false,
   className = '',
   calloutWrapClassName = '',
@@ -17,13 +22,24 @@ export default function StageShell({
   contentClassName = '',
   detailsLaneClassName = '',
 }) {
+  const operationBadge = getOperationBadge(currentStep, algorithmType, algorithmId);
+  const calloutBadges = [operationBadge, ...badges].filter(Boolean);
+  const learningPanel = learning ? (
+    <LearningPanel
+      currentStep={currentStep}
+      algorithmType={algorithmType}
+      algorithmId={algorithmId}
+      learning={learning}
+    />
+  ) : null;
+
   return (
     <div className={`stage-shell flex-1 min-h-0 relative flex flex-col overflow-hidden bg-surface ${className}`}>
       {showGrid && <div className="stage-blueprint-grid" />}
 
       <div className={`stage-callout-wrap ${calloutWrapClassName}`}>
         <StepCallout
-          badges={badges}
+          badges={calloutBadges}
           description={currentStep.description}
           className={calloutClassName}
         />
@@ -34,6 +50,7 @@ export default function StageShell({
         {children}
         <StageDetailsLane
           className={detailsLaneClassName}
+          learningPanel={learningPanel}
           activeLine={currentStep.codeLine}
           code={code}
           {...playback}

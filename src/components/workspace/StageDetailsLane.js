@@ -4,6 +4,7 @@ import PlaybackPanel from './PlaybackPanel';
 
 export default function StageDetailsLane({
   children,
+  learningPanel = null,
   className = '',
   isPlaying,
   speed,
@@ -18,6 +19,7 @@ export default function StageDetailsLane({
 }) {
   return (
     <div id="sidebar-lane" className={`stage-details-lane ${className}`}>
+      {learningPanel}
       {children}
       <PlaybackPanel
         isPlaying={isPlaying}

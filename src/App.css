@@ -109,6 +109,35 @@ svg {
   color: var(--color-primary);
 }
 
+.step-callout-badge.swap,
+.step-callout-badge.place,
+.step-callout-badge.relax,
+.step-callout-badge.insert {
+  border-color: rgb(255 185 95 / 0.28);
+  background: rgb(255 185 95 / 0.12);
+  color: var(--color-tertiary);
+}
+
+.step-callout-badge.visit,
+.step-callout-badge.complete,
+.step-callout-badge.store {
+  border-color: rgb(52 211 153 / 0.28);
+  background: rgb(52 211 153 / 0.12);
+  color: rgb(110 231 183);
+}
+
+.step-callout-badge.partition,
+.step-callout-badge.pivot,
+.step-callout-badge.merge,
+.step-callout-badge.lookup,
+.step-callout-badge.push,
+.step-callout-badge.enqueue,
+.step-callout-badge.pop {
+  border-color: rgb(208 188 255 / 0.28);
+  background: rgb(208 188 255 / 0.12);
+  color: var(--color-secondary);
+}
+
 .step-callout-description {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 0.625rem;
@@ -170,6 +199,83 @@ svg {
 
 .graph-details-lane {
   max-height: clamp(14rem, 30vh, 20rem);
+}
+
+.learning-panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.learning-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-bottom: 1px solid rgb(30 41 59 / 0.45);
+  padding-bottom: 0.3rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(148 163 184);
+}
+
+.learning-panel-copy {
+  margin: 0;
+  color: rgb(203 213 225);
+  font-size: 0.75rem;
+  line-height: 1.55;
+}
+
+.learning-legend {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem;
+}
+
+.learning-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  color: rgb(203 213 225);
+  font-size: 0.7rem;
+}
+
+.learning-legend-swatch {
+  width: 0.65rem;
+  height: 0.65rem;
+  flex: 0 0 auto;
+  border-radius: 9999px;
+  border: 1px solid rgb(76 215 246 / 0.5);
+  background: rgb(76 215 246 / 0.18);
+  box-shadow: 0 0 12px rgb(76 215 246 / 0.24);
+}
+
+.learning-legend-swatch.swap,
+.learning-legend-swatch.relax,
+.learning-legend-swatch.insert {
+  border-color: rgb(255 185 95 / 0.55);
+  background: rgb(255 185 95 / 0.2);
+  box-shadow: 0 0 12px rgb(255 185 95 / 0.24);
+}
+
+.learning-legend-swatch.visit {
+  border-color: rgb(208 188 255 / 0.55);
+  background: rgb(208 188 255 / 0.18);
+  box-shadow: 0 0 12px rgb(208 188 255 / 0.2);
+}
+
+.learning-legend-swatch.complete {
+  border-color: rgb(52 211 153 / 0.55);
+  background: rgb(52 211 153 / 0.18);
+  box-shadow: 0 0 12px rgb(52 211 153 / 0.2);
+}
+
+.learning-legend-swatch.muted {
+  border-color: rgb(100 116 139 / 0.55);
+  background: rgb(100 116 139 / 0.18);
+  box-shadow: none;
 }
 
 @media (min-width: 1024px) {

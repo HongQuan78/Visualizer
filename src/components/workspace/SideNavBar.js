@@ -21,6 +21,7 @@ export default function SideNavBar({
   algoType = 'array',
   sizeRange = { min: 4, max: 30 },
   inputConfig,
+  legend = [],
 }) {
   // Controla qué categoría está expandida en el acordeón
   const [expandedCategory, setExpandedCategory] = useState(algorithmMeta?.category || 'Sorting');
@@ -217,24 +218,14 @@ export default function SideNavBar({
 
         {/* ─── Leyenda ─── */}
         <div className="px-6 pb-6">
-          <label className="font-mono text-[10px] uppercase tracking-widest text-slate-500 block mb-4">Color Legend</label>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-3.5 h-3.5 rounded bg-primary shadow-[0_0_8px_rgba(76,215,246,0.4)]"></div>
-              <span className="text-[11px] text-on-surface-variant">Comparing</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <div className="w-3.5 h-3.5 rounded bg-tertiary shadow-[0_0_8px_rgba(255,185,95,0.4)]"></div>
-              <span className="text-[11px] text-on-surface-variant">Swapping</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <div className="w-3.5 h-3.5 rounded bg-secondary shadow-[0_0_8px_rgba(208,188,255,0.2)]"></div>
-              <span className="text-[11px] text-on-surface-variant">Sorted</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <div className="w-3.5 h-3.5 rounded bg-surface-container-highest ghost-border"></div>
-              <span className="text-[11px] text-on-surface-variant">Unsorted</span>
-            </div>
+          <label className="font-mono text-[10px] uppercase tracking-widest text-slate-500 block mb-4">Visual Legend</label>
+          <div className="grid grid-cols-1 gap-2.5">
+            {legend.map((item) => (
+              <div key={item.label} className="flex items-center gap-2.5">
+                <div className={`learning-legend-swatch ${item.tone || ''}`}></div>
+                <span className="text-[11px] text-on-surface-variant">{item.label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
