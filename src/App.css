@@ -90,6 +90,21 @@ svg {
   margin-inline: auto;
 }
 
+.stage-details-lane {
+  width: 100%;
+  height: auto;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  overflow-y: visible;
+  border-top: 1px solid rgb(30 41 59 / 0.3);
+  background: rgb(15 23 42 / 0.1);
+  backdrop-filter: blur(12px);
+}
+
 .graph-details-lane {
   max-height: clamp(14rem, 30vh, 20rem);
 }
@@ -101,6 +116,18 @@ svg {
 
   .graph-details-lane {
     max-height: clamp(12rem, 26vh, 18rem);
+    width: 100%;
+    height: auto;
+    border-top: 1px solid rgb(30 41 59 / 0.3);
+    border-left: 0;
+  }
+
+  .stage-details-lane {
+    width: 22.5rem;
+    height: 100%;
+    overflow-y: auto;
+    border-top: 0;
+    border-left: 1px solid rgb(30 41 59 / 0.3);
   }
 }
 
@@ -121,6 +148,14 @@ svg {
 
   .graph-details-lane {
     max-height: none;
+    width: 25rem;
+    height: 100%;
+    border-top: 0;
+    border-left: 1px solid rgb(30 41 59 / 0.3);
+  }
+
+  .stage-details-lane {
+    width: 25rem;
   }
 }
 

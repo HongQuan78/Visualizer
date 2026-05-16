@@ -9,6 +9,13 @@ import VisualizationHeader from './VisualizationHeader';
 import Footer from './Footer';
 import useVisualizerEngine from './hooks/useVisualizerEngine';
 
+const STAGE_BY_TYPE = {
+  array: VisualizationStage,
+  graph: GraphStage,
+  tree: TreeStage,
+  dp: DPStage,
+};
+
 export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubble-sort');
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => (
@@ -18,7 +25,7 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
   const meta = engine.currentAlgoConfig.meta;
   const isGraph = engine.currentAlgoConfig.type === 'graph';
   const isTree = engine.currentAlgoConfig.type === 'tree';
-  const isDP = engine.currentAlgoConfig.type === 'dp';
+  const StageComponent = STAGE_BY_TYPE[engine.currentAlgoConfig.type] || VisualizationStage;
 
   return (
     <div className="overflow-hidden workspace-shell flex flex-col">
@@ -48,6 +55,7 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
             }}
             algorithmMeta={meta}
             algoType={engine.currentAlgoConfig.type}
+            sizeRange={engine.currentAlgoConfig.size}
           />
         </div>
 
@@ -77,62 +85,21 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
           />
 
           <div className="flex-1 min-h-0 relative flex flex-col overflow-hidden">
-            {isDP ? (
-              <DPStage
-                currentStep={engine.currentStep}
-                isPlaying={engine.isPlaying}
-                speed={engine.speed}
-                onTogglePlayback={engine.togglePlayback}
-                onStepForward={engine.stepForward}
-                onStepBackward={engine.stepBackward}
-                onSpeedChange={engine.handleSpeedChange}
-                currentStepIndex={engine.currentStepIndex}
-                totalSteps={engine.totalSteps}
-                code={engine.currentAlgoConfig.code}
-              />
-            ) : isTree ? (
-              <TreeStage
-                currentStep={engine.currentStep}
-                isPlaying={engine.isPlaying}
-                speed={engine.speed}
-                onTogglePlayback={engine.togglePlayback}
-                onStepForward={engine.stepForward}
-                onStepBackward={engine.stepBackward}
-                onSpeedChange={engine.handleSpeedChange}
-                currentStepIndex={engine.currentStepIndex}
-                totalSteps={engine.totalSteps}
-                code={engine.currentAlgoConfig.code}
-              />
-            ) : isGraph ? (
-              <GraphStage
-                currentStep={engine.currentStep}
-                isPlaying={engine.isPlaying}
-                speed={engine.speed}
-                onTogglePlayback={engine.togglePlayback}
-                onStepForward={engine.stepForward}
-                onStepBackward={engine.stepBackward}
-                onSpeedChange={engine.handleSpeedChange}
-                currentStepIndex={engine.currentStepIndex}
-                totalSteps={engine.totalSteps}
-                code={engine.currentAlgoConfig.code}
-                algoId={selectedAlgorithm}
-                rootNodeId={engine.rootNodeId}
-                onRootNodeChange={engine.handleRootNodeChange}
-              />
-            ) : (
-              <VisualizationStage
-                currentStep={engine.currentStep}
-                isPlaying={engine.isPlaying}
-                speed={engine.speed}
-                onTogglePlayback={engine.togglePlayback}
-                onStepForward={engine.stepForward}
-                onStepBackward={engine.stepBackward}
-                onSpeedChange={engine.handleSpeedChange}
-                currentStepIndex={engine.currentStepIndex}
-                totalSteps={engine.totalSteps}
-                code={engine.currentAlgoConfig.code}
-              />
-            )}
+            <StageComponent
+              currentStep={engine.currentStep}
+              isPlaying={engine.isPlaying}
+              speed={engine.speed}
+              onTogglePlayback={engine.togglePlayback}
+              onStepForward={engine.stepForward}
+              onStepBackward={engine.stepBackward}
+              onSpeedChange={engine.handleSpeedChange}
+              currentStepIndex={engine.currentStepIndex}
+              totalSteps={engine.totalSteps}
+              code={engine.currentAlgoConfig.code}
+              algoId={selectedAlgorithm}
+              rootNodeId={engine.rootNodeId}
+              onRootNodeChange={engine.handleRootNodeChange}
+            />
           </div>
         </main>
       </div>

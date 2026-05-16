@@ -17,6 +17,7 @@ export default function SideNavBar({
   onAlgorithmChange,
   algorithmMeta,
   algoType = 'array',
+  sizeRange = { min: 4, max: 30 },
 }) {
   // Controla qué categoría está expandida en el acordeón
   const [expandedCategory, setExpandedCategory] = useState(algorithmMeta?.category || 'Sorting');
@@ -155,8 +156,8 @@ export default function SideNavBar({
               <input
                 className="w-full h-1 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary"
                 type="range"
-                min={algoType === 'dp' ? 2 : 4}
-                max={algoType === 'array' ? 30 : algoType === 'dp' ? 15 : 12}
+                min={sizeRange.min}
+                max={sizeRange.max}
                 value={dataSize}
                 onChange={(e) => onDataSizeChange(Number(e.target.value))}
               />

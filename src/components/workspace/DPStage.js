@@ -1,5 +1,5 @@
 import React from 'react';
-import CodeViewer from './CodeViewer';
+import StageDetailsLane from './StageDetailsLane';
 
 /**
  * DPStage: renderiza la tabla de programación dinámica
@@ -48,14 +48,14 @@ export default function DPStage({
   const cellTopY = startY;
 
   return (
-    <div className="flex-1 relative flex flex-col p-4 md:p-8 overflow-hidden bg-surface">
+    <div className="flex-1 min-h-0 relative flex flex-col p-3 sm:p-4 md:p-8 overflow-hidden bg-surface">
       {/* Fondo de grilla blueprint */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
            style={{ backgroundImage: 'linear-gradient(#4CD7F6 1px, transparent 1px), linear-gradient(90deg, #4CD7F6 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
       </div>
 
       {/* Tooltip de descripción */}
-      <div className="flex justify-center mb-4 md:mb-8 lg:pr-[400px] z-20 pt-4 md:pt-8">
+      <div className="flex justify-center mb-3 md:mb-8 lg:pr-[400px] z-20 pt-3 md:pt-8">
         <div className="glass-panel ghost-border rounded-full px-4 md:px-6 py-2 text-center shadow-lg pointer-events-auto max-w-2xl">
           <span className="font-mono text-[10px] md:text-xs text-on-surface-variant tracking-wide uppercase">
             {currentStep.description}
@@ -64,11 +64,11 @@ export default function DPStage({
       </div>
 
       {/* Área principal: Tabla DP + Panel lateral */}
-      <div className="flex-1 relative flex flex-col lg:flex-row overflow-hidden lg:overflow-visible overflow-y-auto lg:overflow-y-hidden">
+      <div className="flex-1 min-h-0 relative flex flex-col lg:flex-row overflow-y-auto lg:overflow-y-hidden lg:overflow-visible stage-scroll">
         {/* Zona de la tabla DP */}
-        <div className="flex-1 relative mb-6 flex flex-col min-h-[450px] lg:min-h-0">
+        <div className="flex-1 relative mb-4 lg:mb-6 flex flex-col min-h-[300px] sm:min-h-[380px] lg:min-h-0">
           <div className="flex-1 relative min-h-0 overflow-auto custom-scrollbar flex items-center justify-center p-2 md:p-4">
-            <div className="w-full h-full min-w-[800px] md:min-w-0 flex items-center justify-center">
+            <div className="w-full h-full min-w-[560px] sm:min-w-[680px] md:min-w-0 flex items-center justify-center">
             <svg 
               viewBox={`0 0 1000 500`} 
               preserveAspectRatio="xMidYMid meet" 
@@ -247,68 +247,19 @@ export default function DPStage({
           </div>
         </div>
 
-        {/* Panel lateral: Controles + Código */}
-        <div id="sidebar-lane" className="w-full lg:w-[400px] h-auto lg:h-full flex-shrink-0 relative flex flex-col gap-3 p-4 md:px-4 md:py-2 overflow-y-visible lg:overflow-y-auto custom-scrollbar border-t lg:border-t-0 lg:border-l border-slate-800/30 bg-slate-900/10 backdrop-blur-md">
-          {/* Controles de reproducción */}
-          <div className="glass-panel ghost-border rounded-xl p-3 shadow-xl flex flex-col gap-3 shrink-0">
-            <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-800/50 pb-1 flex items-center gap-2">
-              <span className="material-symbols-outlined text-[14px]">settings_input_component</span>
-              Playback
-            </div>
-            
-            {/* Barra de progreso */}
-            <div className="px-1">
-              <div className="flex justify-between text-[9px] font-mono text-slate-500 mb-1 uppercase">
-                <span>Step</span>
-                <span>{currentStepIndex} / {totalSteps - 1}</span>
-              </div>
-              <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-primary transition-all duration-300 shadow-[0_0_8px_rgba(76,215,246,0.5)]"
-                  style={{ width: `${totalSteps > 1 ? (currentStepIndex / (totalSteps - 1)) * 100 : 0}%` }}
-                ></div>
-              </div>
-            </div>
-
-            {/* Botones de reproducción */}
-            <div className="flex flex-col gap-3 mt-1">
-              <div className="flex items-center justify-between px-2">
-                <button onClick={onStepBackward} className="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-xl">skip_previous</button>
-                <button 
-                  onClick={onTogglePlayback}
-                  className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-black hover:scale-105 transition-transform shadow-lg shadow-primary/20"
-                >
-                  <span className="material-symbols-outlined">{isPlaying ? 'pause' : 'play_arrow'}</span>
-                </button>
-                <button onClick={onStepForward} className="material-symbols-outlined text-slate-400 hover:text-primary transition-colors text-xl">skip_next</button>
-              </div>
-
-              <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-800/50">
-                <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Speed</span>
-                <div className="flex gap-1">
-                  {['0.5x', '1x', '2x', '4x'].map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => onSpeedChange(s)}
-                      className={`px-2 py-1 rounded text-[9px] font-mono transition-colors ${
-                        speed === s ? 'bg-primary text-black font-bold' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-                      }`}
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Visor de código */}
-          <CodeViewer 
-            activeLine={currentStep.codeLine}
-            isPlaying={isPlaying}
-            code={code}
-          />
-        </div>
+        <StageDetailsLane
+          className="custom-scrollbar"
+          isPlaying={isPlaying}
+          speed={speed}
+          onTogglePlayback={onTogglePlayback}
+          onStepForward={onStepForward}
+          onStepBackward={onStepBackward}
+          onSpeedChange={onSpeedChange}
+          currentStepIndex={currentStepIndex}
+          totalSteps={totalSteps}
+          activeLine={currentStep.codeLine}
+          code={code}
+        />
       </div>
     </div>
   );
