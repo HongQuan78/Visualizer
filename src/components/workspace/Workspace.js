@@ -44,6 +44,7 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
             currentStepIndex={engine.currentStepIndex}
             totalSteps={engine.totalSteps}
             onDataSizeChange={engine.handleDataSizeChange}
+            onApplyInput={engine.handleApplyInput}
             onRandomize={engine.handleRandomize}
             onReset={engine.reset}
             selectedAlgorithm={selectedAlgorithm}
@@ -56,6 +57,7 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
             algorithmMeta={meta}
             algoType={engine.currentAlgoConfig.type}
             sizeRange={engine.currentAlgoConfig.size}
+            inputConfig={engine.currentAlgoConfig.input}
           />
         </div>
 

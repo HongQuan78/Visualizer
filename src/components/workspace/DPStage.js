@@ -1,5 +1,5 @@
 import React from 'react';
-import StageDetailsLane from './StageDetailsLane';
+import StageShell from './StageShell';
 
 /**
  * DPStage: renderiza la tabla de programación dinámica
@@ -46,25 +46,27 @@ export default function DPStage({
   const cellX = (idx) => startX + idx * (cellWidth + cellGap);
   const cellCenterX = (idx) => cellX(idx) + cellWidth / 2;
   const cellTopY = startY;
+  const playback = {
+    isPlaying,
+    speed,
+    onTogglePlayback,
+    onStepForward,
+    onStepBackward,
+    onSpeedChange,
+    currentStepIndex,
+    totalSteps,
+  };
 
   return (
-    <div className="flex-1 min-h-0 relative flex flex-col p-3 sm:p-4 md:p-8 overflow-hidden bg-surface">
-      {/* Fondo de grilla blueprint */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-           style={{ backgroundImage: 'linear-gradient(#4CD7F6 1px, transparent 1px), linear-gradient(90deg, #4CD7F6 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
-      </div>
-
-      {/* Tooltip de descripción */}
-      <div className="flex justify-center mb-3 md:mb-8 lg:pr-[400px] z-20 pt-3 md:pt-8">
-        <div className="glass-panel ghost-border rounded-full px-4 md:px-6 py-2 text-center shadow-lg pointer-events-auto max-w-2xl">
-          <span className="font-mono text-[10px] md:text-xs text-on-surface-variant tracking-wide uppercase">
-            {currentStep.description}
-          </span>
-        </div>
-      </div>
-
-      {/* Área principal: Tabla DP + Panel lateral */}
-      <div className="flex-1 min-h-0 relative flex flex-col lg:flex-row overflow-y-auto lg:overflow-y-hidden lg:overflow-visible stage-scroll">
+    <StageShell
+      currentStep={currentStep}
+      playback={playback}
+      code={code}
+      showGrid
+      calloutWrapClassName="md:mb-8 lg:pr-[400px] pt-3 md:pt-8"
+      contentClassName="stage-scroll"
+      detailsLaneClassName="custom-scrollbar"
+    >
         {/* Zona de la tabla DP */}
         <div className="flex-1 relative mb-4 lg:mb-6 flex flex-col min-h-[300px] sm:min-h-[380px] lg:min-h-0">
           <div className="flex-1 relative min-h-0 overflow-auto custom-scrollbar flex items-center justify-center p-2 md:p-4">
@@ -247,20 +249,6 @@ export default function DPStage({
           </div>
         </div>
 
-        <StageDetailsLane
-          className="custom-scrollbar"
-          isPlaying={isPlaying}
-          speed={speed}
-          onTogglePlayback={onTogglePlayback}
-          onStepForward={onStepForward}
-          onStepBackward={onStepBackward}
-          onSpeedChange={onSpeedChange}
-          currentStepIndex={currentStepIndex}
-          totalSteps={totalSteps}
-          activeLine={currentStep.codeLine}
-          code={code}
-        />
-      </div>
-    </div>
+    </StageShell>
   );
 }

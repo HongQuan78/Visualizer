@@ -1,5 +1,5 @@
 import React from 'react';
-import StageDetailsLane from './StageDetailsLane';
+import StageShell from './StageShell';
 
 /**
  * VisualizationStage: renders array bars dynamically.
@@ -26,6 +26,16 @@ export default function VisualizationStage({
   }
 
   const { array, comparing = [], swapping = null, sorted = new Set(), activeRange = null, tempArray = null, tempOffset = 0 } = currentStep;
+  const playback = {
+    isPlaying,
+    speed,
+    onTogglePlayback,
+    onStepForward,
+    onStepBackward,
+    onSpeedChange,
+    currentStepIndex,
+    totalSteps,
+  };
 
   // Calcular el valor máximo para escalar las barras
   const maxVal = Math.max(...array, 1);
@@ -66,23 +76,15 @@ export default function VisualizationStage({
   }
 
   return (
-    <div className="flex-1 min-h-0 relative flex flex-col p-3 sm:p-4 md:p-8 overflow-hidden bg-surface">
-      {/* Description Tooltip (Fixed Top) */}
-      <div className="flex justify-center mb-3 md:mb-8 lg:pr-[400px] z-20">
-        <div className="glass-panel ghost-border rounded-full px-4 md:px-6 py-2 text-center shadow-lg pointer-events-auto max-w-2xl flex flex-wrap items-center justify-center gap-2">
-          {currentStep.target !== undefined && (
-            <span className="font-mono text-[10px] md:text-xs text-primary bg-primary/10 border border-primary/20 rounded px-2 py-0.5">
-              TARGET {currentStep.target}
-            </span>
-          )}
-          <span className="font-mono text-[10px] md:text-xs text-on-surface-variant tracking-wide uppercase">
-            {currentStep.description}
-          </span>
-        </div>
-      </div>
-
-      {/* Main Content Area */}
-      <div className="flex-1 min-h-0 relative flex flex-col lg:flex-row overflow-y-auto lg:overflow-y-hidden lg:overflow-visible stage-scroll">
+    <StageShell
+      currentStep={currentStep}
+      playback={playback}
+      code={code}
+      badges={currentStep.target !== undefined ? [{ label: `TARGET ${currentStep.target}` }] : []}
+      calloutWrapClassName="md:mb-8 lg:pr-[400px]"
+      contentClassName="stage-scroll"
+      detailsLaneClassName="custom-scrollbar"
+    >
         {/* Bars Container */}
         <div className="flex-1 flex flex-col justify-center overflow-hidden py-3 md:py-8 min-h-[260px] sm:min-h-[300px] lg:min-h-0">
           {/* Main Array */}
@@ -148,22 +150,6 @@ export default function VisualizationStage({
             </div>
           )}
         </div>
-
-        {/* Lane reserved for Sidebar Content (Controls + Code) */}
-        <StageDetailsLane
-          className="custom-scrollbar"
-          isPlaying={isPlaying}
-          speed={speed}
-          onTogglePlayback={onTogglePlayback}
-          onStepForward={onStepForward}
-          onStepBackward={onStepBackward}
-          onSpeedChange={onSpeedChange}
-          currentStepIndex={currentStepIndex}
-          totalSteps={totalSteps}
-          activeLine={currentStep.codeLine}
-          code={code}
-        />
-      </div>
-    </div>
+    </StageShell>
   );
 }

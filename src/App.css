@@ -64,8 +64,71 @@ svg {
   --graph-min-block-size: clamp(22rem, 50vh, 36rem);
 }
 
+.stage-shell {
+  padding: 0.75rem;
+}
+
+.stage-blueprint-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image:
+    linear-gradient(#4cd7f6 1px, transparent 1px),
+    linear-gradient(90deg, #4cd7f6 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.stage-callout-wrap {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.step-callout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: min(42rem, calc(100vw - 2rem));
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+
+.step-callout-badge {
+  border: 1px solid rgb(76 215 246 / 0.2);
+  border-radius: 0.25rem;
+  background: rgb(76 215 246 / 0.1);
+  padding: 0.125rem 0.5rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.625rem;
+  color: var(--color-primary);
+}
+
+.step-callout-description {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.625rem;
+  color: var(--color-on-surface-variant);
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.stage-content {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
 .graph-step-callout {
   max-width: min(44rem, calc(100vw - 2rem));
+  border-radius: 0.5rem;
 }
 
 .graph-canvas-wrap {
@@ -110,6 +173,21 @@ svg {
 }
 
 @media (min-width: 1024px) {
+  .stage-shell {
+    padding: 2rem;
+  }
+
+  .stage-content {
+    flex-direction: row;
+    overflow-y: hidden;
+    overflow: visible;
+  }
+
+  .graph-stage .stage-content {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
   .graph-stage {
     --graph-min-block-size: clamp(22rem, 44vh, 34rem);
   }
@@ -133,7 +211,21 @@ svg {
 
 @media (min-width: 1536px) {
   .graph-stage {
+    padding: 1.5rem;
+  }
+
+  .graph-stage {
     --graph-min-block-size: 100%;
+  }
+
+  .graph-stage .stage-content {
+    flex-direction: row;
+    overflow-y: hidden;
+    overflow: visible;
+  }
+
+  .graph-stage .stage-callout-wrap {
+    margin-bottom: 1.25rem;
   }
 
   .graph-canvas-wrap,

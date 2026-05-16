@@ -1,5 +1,5 @@
 import React from 'react';
-import StageDetailsLane from './StageDetailsLane';
+import StageShell from './StageShell';
 
 /**
  * TreeStage: renderiza un BST con nodos y aristas dirigidas.
@@ -36,43 +36,44 @@ export default function TreeStage({
   } = currentStep;
 
   const { nodes = [], edges = [] } = tree;
+  const playback = {
+    isPlaying,
+    speed,
+    onTogglePlayback,
+    onStepForward,
+    onStepBackward,
+    onSpeedChange,
+    currentStepIndex,
+    totalSteps,
+  };
+  const insertionIndicator = currentInsertValue !== null ? (
+    <div className="flex justify-center mb-2 pr-0 lg:pr-[400px] z-20">
+      <div className="flex items-center gap-2 glass-panel ghost-border rounded-lg px-4 py-1.5 shadow-md">
+        <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest">Inserting</span>
+        <span className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-sm font-mono text-emerald-400 font-bold animate-pulse">
+          {currentInsertValue}
+        </span>
+      </div>
+    </div>
+  ) : null;
 
   // Mapeo rápido de id → posición para dibujar aristas
   const nodeMap = {};
   nodes.forEach(n => { nodeMap[n.id] = n; });
 
   return (
-    <div className="flex-1 min-h-0 relative flex flex-col p-3 sm:p-4 md:p-8 overflow-hidden bg-surface">
-      {/* Fondo de grilla blueprint */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-           style={{ backgroundImage: 'linear-gradient(#4CD7F6 1px, transparent 1px), linear-gradient(90deg, #4CD7F6 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
-      </div>
-
-      {/* Tooltip de descripción del paso actual */}
-      <div className="flex justify-center mb-3 md:mb-4 pr-0 lg:pr-[400px] z-20 pt-3 md:pt-8">
-        <div className="glass-panel ghost-border rounded-full px-4 md:px-6 py-2 text-center shadow-lg pointer-events-auto max-w-2xl">
-          <span className="font-mono text-[10px] md:text-xs text-on-surface-variant tracking-wide uppercase">
-            {currentStep.description}
-          </span>
-        </div>
-      </div>
-
-      {/* Indicador del valor que se está insertando */}
-      {currentInsertValue !== null && (
-        <div className="flex justify-center mb-2 pr-0 lg:pr-[400px] z-20">
-          <div className="flex items-center gap-2 glass-panel ghost-border rounded-lg px-4 py-1.5 shadow-md">
-            <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest">Inserting</span>
-            <span className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-sm font-mono text-emerald-400 font-bold animate-pulse">
-              {currentInsertValue}
-            </span>
-          </div>
-        </div>
-      )}
-
-      {/* Área principal: Árbol + Panel lateral */}
-      <div className="flex-1 min-h-0 relative flex flex-col lg:flex-row overflow-y-auto lg:overflow-y-hidden lg:overflow-visible stage-scroll">
-        {/* Zona del árbol SVG */}
-        <div className="flex-1 relative mb-4 lg:mb-6 flex flex-col min-h-[300px] sm:min-h-[380px] lg:min-h-0">
+    <StageShell
+      currentStep={currentStep}
+      playback={playback}
+      code={code}
+      showGrid
+      subheader={insertionIndicator}
+      calloutWrapClassName="md:mb-4 pr-0 lg:pr-[400px] pt-3 md:pt-8"
+      contentClassName="stage-scroll"
+      detailsLaneClassName="custom-scrollbar"
+    >
+      {/* Zona del árbol SVG */}
+      <div className="flex-1 relative mb-4 lg:mb-6 flex flex-col min-h-[300px] sm:min-h-[380px] lg:min-h-0">
           <div className="flex-1 relative min-h-0 overflow-auto custom-scrollbar flex items-center justify-center p-2 md:p-4">
             <div className="w-full h-full min-w-[560px] sm:min-w-[680px] md:min-w-0 flex items-center justify-center">
               <svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" className="w-full h-full max-h-[100%] drop-shadow-2xl">
@@ -224,20 +225,6 @@ export default function TreeStage({
           </div>
         </div>
 
-        <StageDetailsLane
-          className="custom-scrollbar"
-          isPlaying={isPlaying}
-          speed={speed}
-          onTogglePlayback={onTogglePlayback}
-          onStepForward={onStepForward}
-          onStepBackward={onStepBackward}
-          onSpeedChange={onSpeedChange}
-          currentStepIndex={currentStepIndex}
-          totalSteps={totalSteps}
-          activeLine={currentStep.codeLine}
-          code={code}
-        />
-      </div>
-    </div>
+    </StageShell>
   );
 }

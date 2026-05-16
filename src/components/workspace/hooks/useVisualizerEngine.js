@@ -13,6 +13,13 @@ import {
 
 const SPEED_MAP = { '0.5x': 1200, '1x': 600, '2x': 300, '4x': 100 };
 
+function getDataSizeFromSource(data, fallback) {
+  if (Array.isArray(data)) return data.length;
+  if (typeof data === 'number') return data;
+  if (data?.nodes) return data.nodes.length;
+  return fallback;
+}
+
 export default function useVisualizerEngine(selectedAlgorithmId = DEFAULT_ALGORITHM_ID) {
   const currentAlgoConfig = getAlgorithmConfig(selectedAlgorithmId);
   const initialSize = getDefaultDataSize(currentAlgoConfig);
@@ -27,9 +34,11 @@ export default function useVisualizerEngine(selectedAlgorithmId = DEFAULT_ALGORI
   });
 
   const [rootNodeId, setRootNodeId] = useState(null);
+  const [customDataByAlgorithm, setCustomDataByAlgorithm] = useState({});
 
   // Ref para rastrear el tipo previo y detectar cambios de categoría
   const prevTypeRef = useRef(currentAlgoConfig.type);
+  const prevAlgorithmRef = useRef(selectedAlgorithmId);
 
   // Initialize rootNodeId when sourceData changes (for graphs)
   useEffect(() => {
@@ -107,22 +116,31 @@ export default function useVisualizerEngine(selectedAlgorithmId = DEFAULT_ALGORI
   useEffect(() => {
     stopPlayback();
     const config = getAlgorithmConfig(selectedAlgorithmId);
+    const algorithmChanged = prevAlgorithmRef.current !== selectedAlgorithmId;
+    const savedCustomData = customDataByAlgorithm[selectedAlgorithmId];
 
     let newData = sourceData;
     const newType = config.type;
 
-    if (prevTypeRef.current !== newType) {
+    if (savedCustomData) {
+      newData = savedCustomData;
+      setSourceData(newData);
+      setDataSize(getDataSizeFromSource(newData, getDefaultDataSize(config)));
+    } else if (prevTypeRef.current !== newType) {
       const defaultSize = getDefaultDataSize(config);
       newData = config.dataGenerator(defaultSize);
       setSourceData(newData);
       setDataSize(defaultSize);
       prevTypeRef.current = newType;
+    } else if (algorithmChanged) {
+      setDataSize(getDataSizeFromSource(newData, getDefaultDataSize(config)));
     }
 
     const { steps: newSteps } = config.generator(newData, rootNodeId);
     setSteps(newSteps);
     setCurrentStepIndex(0);
-  }, [selectedAlgorithmId, rootNodeId, sourceData, stopPlayback]);
+    prevAlgorithmRef.current = selectedAlgorithmId;
+  }, [customDataByAlgorithm, selectedAlgorithmId, rootNodeId, sourceData, stopPlayback]);
 
   // Mantener refs sincronizados con el estado
   useEffect(() => {
@@ -147,14 +165,36 @@ export default function useVisualizerEngine(selectedAlgorithmId = DEFAULT_ALGORI
     const clamped = clampDataSize(config, newSize);
     setDataSize(clamped);
     const newData = config.dataGenerator(clamped);
+    setCustomDataByAlgorithm((prev) => {
+      const next = { ...prev };
+      delete next[selectedAlgorithmId];
+      return next;
+    });
     regenerate(newData);
   }, [selectedAlgorithmId, regenerate]);
 
   const handleRandomize = useCallback(() => {
     const config = getAlgorithmConfig(selectedAlgorithmId);
     const newData = config.dataGenerator(dataSize);
+    setCustomDataByAlgorithm((prev) => {
+      const next = { ...prev };
+      delete next[selectedAlgorithmId];
+      return next;
+    });
     regenerate(newData);
   }, [selectedAlgorithmId, dataSize, regenerate]);
+
+  const handleApplyInput = useCallback((newData) => {
+    const config = getAlgorithmConfig(selectedAlgorithmId);
+    const nextSize = getDataSizeFromSource(newData, dataSize);
+
+    setCustomDataByAlgorithm((prev) => ({
+      ...prev,
+      [selectedAlgorithmId]: newData,
+    }));
+    setDataSize(clampDataSize(config, nextSize));
+    regenerate(newData);
+  }, [dataSize, regenerate, selectedAlgorithmId]);
 
   const handleRootNodeChange = useCallback((newRootId) => {
     stopPlayback();
@@ -218,6 +258,7 @@ export default function useVisualizerEngine(selectedAlgorithmId = DEFAULT_ALGORI
     handleSpeedChange,
     handleDataSizeChange,
     handleRandomize,
+    handleApplyInput,
     handleRootNodeChange,
   };
 }

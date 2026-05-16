@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ALGORITHM_REGISTRY from './algorithms/registry';
+import InputPanel from './InputPanel';
 
 /**
  * SideNavBar: panel lateral con selector de algoritmo agrupado por categoría
@@ -11,6 +12,7 @@ export default function SideNavBar({
   currentStepIndex,
   totalSteps,
   onDataSizeChange,
+  onApplyInput,
   onRandomize,
   onReset,
   selectedAlgorithm = 'bubble-sort',
@@ -18,6 +20,7 @@ export default function SideNavBar({
   algorithmMeta,
   algoType = 'array',
   sizeRange = { min: 4, max: 30 },
+  inputConfig,
 }) {
   // Controla qué categoría está expandida en el acordeón
   const [expandedCategory, setExpandedCategory] = useState(algorithmMeta?.category || 'Sorting');
@@ -128,6 +131,15 @@ export default function SideNavBar({
         <div className="px-4 pb-4">
           <label className="font-mono text-[9px] uppercase tracking-widest text-slate-500 block mb-3">Input Configuration</label>
           <div className="space-y-3">
+            <InputPanel
+              inputConfig={inputConfig}
+              sourceData={sourceData}
+              sizeRange={sizeRange}
+              algoType={algoType}
+              onApplyInput={onApplyInput}
+              onRandomize={onRandomize}
+            />
+
             {/* Dato fuente */}
             <div>
               <label className="text-[10px] text-on-surface-variant mb-1.5 block">
@@ -166,14 +178,7 @@ export default function SideNavBar({
             {/* Botones de acción */}
             <div className="flex gap-2">
               <button
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-container-low text-on-surface rounded-lg ghost-border hover:bg-surface-bright transition-colors text-[10px] font-mono uppercase tracking-wider"
-                onClick={onRandomize}
-              >
-                <span className="material-symbols-outlined text-sm">shuffle</span>
-                Random
-              </button>
-              <button
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-container-low text-on-surface rounded-lg ghost-border hover:bg-surface-bright transition-colors text-[10px] font-mono uppercase tracking-wider"
+                className="w-full flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-container-low text-on-surface rounded-lg ghost-border hover:bg-surface-bright transition-colors text-[10px] font-mono uppercase tracking-wider"
                 onClick={onReset}
               >
                 <span className="material-symbols-outlined text-sm">restart_alt</span>

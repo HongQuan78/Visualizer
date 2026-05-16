@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import PlaybackPanel from './PlaybackPanel';
-import StageDetailsLane from './StageDetailsLane';
+import StageShell from './StageShell';
 
 /**
  * GraphStage: Renders nodes and edges for graph algorithms.
@@ -96,30 +96,59 @@ export default function GraphStage({
   const nodeRadius = 42;
   const activeRingRadius = nodeRadius + 8;
   const badgeOffset = nodeRadius * 0.72;
-
-  return (
-    <div className="graph-stage flex-1 min-h-0 relative flex flex-col p-3 sm:p-4 xl:p-6 overflow-hidden bg-surface">
-      {/* Blueprint Grid Background */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-           style={{ backgroundImage: 'linear-gradient(#4CD7F6 1px, transparent 1px), linear-gradient(90deg, #4CD7F6 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
+  const playback = {
+    isPlaying,
+    speed,
+    onTogglePlayback,
+    onStepForward,
+    onStepBackward,
+    onSpeedChange,
+    currentStepIndex,
+    totalSteps,
+  };
+  const details = isDijkstra ? (
+    <div className="glass-panel ghost-border rounded-xl p-3 shadow-xl flex flex-col gap-3 shrink-0">
+      <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-800/50 pb-1 flex items-center gap-2">
+        <span className="material-symbols-outlined text-[14px]">route</span>
+        Shortest Path State
       </div>
-
-      {/* Description Tooltip (Fixed Top) */}
-      <div className="flex justify-center mb-3 xl:mb-5 2xl:pr-[400px] z-20 pt-2 xl:pt-8 2xl:pt-12">
-        <div className="graph-step-callout glass-panel ghost-border rounded-lg xl:rounded-full px-3 md:px-5 py-2 text-center shadow-lg pointer-events-auto">
-          {targetNode && (
-            <span className="font-mono text-[10px] md:text-xs text-primary bg-primary/10 border border-primary/20 rounded px-2 py-0.5 mr-2">
-              TARGET {targetNode}
+      <div>
+        <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-2">Priority Queue</div>
+        <div className="flex flex-wrap gap-1.5">
+          {priorityQueue.length === 0 ? (
+            <span className="text-[10px] font-mono text-slate-600 italic">Queue is empty</span>
+          ) : priorityQueue.map((item, idx) => (
+            <span key={`${item.node}-${item.distance}-${idx}`} className="px-2 py-1 rounded bg-primary/10 border border-primary/20 text-primary text-[10px] font-mono">
+              {item.node}:{item.distance}
             </span>
-          )}
-          <span className="font-mono text-[10px] md:text-xs text-on-surface-variant tracking-wide uppercase">
-            {currentStep.description}
-          </span>
+          ))}
         </div>
       </div>
+      {shortestPath.length > 0 && (
+        <div>
+          <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-2">Final Path</div>
+          <div className="text-xs font-mono text-tertiary font-bold">
+            {shortestPath.join(' -> ')}
+          </div>
+        </div>
+      )}
+    </div>
+  ) : null;
 
-      {/* Main Content Area: Graph + Sidebar Lane */}
-      <div className="flex-1 min-h-0 relative flex flex-col 2xl:flex-row overflow-y-auto 2xl:overflow-y-hidden 2xl:overflow-visible stage-scroll">
+  return (
+    <StageShell
+      currentStep={currentStep}
+      playback={playback}
+      code={code}
+      details={details}
+      badges={targetNode ? [{ label: `TARGET ${targetNode}` }] : []}
+      showGrid
+      className="graph-stage"
+      calloutWrapClassName="xl:mb-5 2xl:pr-[400px] pt-2 xl:pt-8 2xl:pt-12"
+      calloutClassName="graph-step-callout xl:rounded-full px-3 md:px-5"
+      contentClassName="stage-scroll"
+      detailsLaneClassName="graph-details-lane custom-scrollbar"
+    >
         {/* Graph Area */}
         <div className="flex-1 relative mb-4 2xl:mb-6 flex flex-col min-h-[360px] md:min-h-[400px] 2xl:min-h-0">
           <div className="graph-canvas-wrap flex-1 relative min-h-0 overflow-hidden custom-scrollbar flex items-center justify-center p-1 sm:p-2">
@@ -320,50 +349,6 @@ export default function GraphStage({
           />
         </div>
 
-        {/* Lane reserved for Sidebar Content (Controls + Code) */}
-        <StageDetailsLane
-          className="graph-details-lane custom-scrollbar"
-          isPlaying={isPlaying}
-          speed={speed}
-          onTogglePlayback={onTogglePlayback}
-          onStepForward={onStepForward}
-          onStepBackward={onStepBackward}
-          onSpeedChange={onSpeedChange}
-          currentStepIndex={currentStepIndex}
-          totalSteps={totalSteps}
-          activeLine={currentStep.codeLine}
-          code={code}
-        >
-          {isDijkstra && (
-            <div className="glass-panel ghost-border rounded-xl p-3 shadow-xl flex flex-col gap-3 shrink-0">
-              <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest border-b border-slate-800/50 pb-1 flex items-center gap-2">
-                <span className="material-symbols-outlined text-[14px]">route</span>
-                Shortest Path State
-              </div>
-              <div>
-                <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-2">Priority Queue</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {priorityQueue.length === 0 ? (
-                    <span className="text-[10px] font-mono text-slate-600 italic">Queue is empty</span>
-                  ) : priorityQueue.map((item, idx) => (
-                    <span key={`${item.node}-${item.distance}-${idx}`} className="px-2 py-1 rounded bg-primary/10 border border-primary/20 text-primary text-[10px] font-mono">
-                      {item.node}:{item.distance}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              {shortestPath.length > 0 && (
-                <div>
-                  <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-2">Final Path</div>
-                  <div className="text-xs font-mono text-tertiary font-bold">
-                    {shortestPath.join(' -> ')}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </StageDetailsLane>
-      </div>
-    </div>
+    </StageShell>
   );
 }

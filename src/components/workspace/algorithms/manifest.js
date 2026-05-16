@@ -14,6 +14,10 @@ const ARRAY_SIZE = { default: 12, min: 4, max: 30 };
 const GRAPH_SIZE = { default: 8, min: 4, max: 12 };
 const TREE_SIZE = { default: 8, min: 4, max: 12 };
 const DP_SIZE = { default: 10, min: 2, max: 15 };
+const ARRAY_INPUT = {
+  kind: 'array',
+  presets: ['random', 'sorted', 'reverse', 'nearly-sorted'],
+};
 
 export const ALGORITHM_MANIFEST = [
   {
@@ -23,6 +27,7 @@ export const ALGORITHM_MANIFEST = [
     icon: 'data_array',
     available: true,
     size: ARRAY_SIZE,
+    input: ARRAY_INPUT,
     generator: generateTwoSumSteps,
     dataGenerator: generateTwoSumArray,
     meta: TWO_SUM_META,
@@ -35,6 +40,7 @@ export const ALGORITHM_MANIFEST = [
     icon: 'reorder',
     available: true,
     size: ARRAY_SIZE,
+    input: ARRAY_INPUT,
     generator: generateBubbleSortSteps,
     dataGenerator: generateRandomArray,
     meta: BUBBLE_SORT_META,
@@ -47,6 +53,7 @@ export const ALGORITHM_MANIFEST = [
     icon: 'reorder',
     available: true,
     size: ARRAY_SIZE,
+    input: ARRAY_INPUT,
     generator: generateSelectionSortSteps,
     dataGenerator: generateRandomArray,
     meta: SELECTION_SORT_META,
@@ -59,6 +66,7 @@ export const ALGORITHM_MANIFEST = [
     icon: 'reorder',
     available: true,
     size: ARRAY_SIZE,
+    input: ARRAY_INPUT,
     generator: generateInsertionSortSteps,
     dataGenerator: generateRandomArray,
     meta: INSERTION_SORT_META,
@@ -71,6 +79,7 @@ export const ALGORITHM_MANIFEST = [
     icon: 'reorder',
     available: true,
     size: ARRAY_SIZE,
+    input: ARRAY_INPUT,
     generator: generateMergeSortSteps,
     dataGenerator: generateRandomArray,
     meta: MERGE_SORT_META,
@@ -83,6 +92,7 @@ export const ALGORITHM_MANIFEST = [
     icon: 'reorder',
     available: true,
     size: ARRAY_SIZE,
+    input: ARRAY_INPUT,
     generator: generateQuickSortSteps,
     dataGenerator: generateRandomArray,
     meta: QUICK_SORT_META,
@@ -95,6 +105,7 @@ export const ALGORITHM_MANIFEST = [
     icon: 'hub',
     available: true,
     size: GRAPH_SIZE,
+    input: { kind: 'graph' },
     generator: generateBFSSteps,
     dataGenerator: generateRandomGraph,
     meta: BFS_META,
@@ -107,6 +118,7 @@ export const ALGORITHM_MANIFEST = [
     icon: 'hub',
     available: true,
     size: GRAPH_SIZE,
+    input: { kind: 'graph' },
     generator: generateDFSSteps,
     dataGenerator: generateRandomGraph,
     meta: DFS_META,
@@ -119,6 +131,7 @@ export const ALGORITHM_MANIFEST = [
     icon: 'hub',
     available: true,
     size: GRAPH_SIZE,
+    input: { kind: 'graph', weighted: true },
     generator: generateDijkstraSteps,
     dataGenerator: generateWeightedGraph,
     meta: DIJKSTRA_META,
@@ -131,6 +144,7 @@ export const ALGORITHM_MANIFEST = [
     icon: 'layers',
     available: true,
     size: DP_SIZE,
+    input: { kind: 'dp' },
     generator: generateFibonacciSteps,
     dataGenerator: generateFibonacciInput,
     meta: FIBONACCI_META,
@@ -143,6 +157,7 @@ export const ALGORITHM_MANIFEST = [
     icon: 'layers',
     available: false,
     size: DP_SIZE,
+    input: { kind: 'dp' },
     meta: {
       name: 'Knapsack 0/1',
       timeComplexity: 'O(nW)',
@@ -159,6 +174,7 @@ export const ALGORITHM_MANIFEST = [
     icon: 'account_tree',
     available: true,
     size: TREE_SIZE,
+    input: { kind: 'tree' },
     generator: generateBSTInsertSteps,
     dataGenerator: generateRandomBSTValues,
     meta: BST_INSERT_META,
@@ -171,6 +187,7 @@ export const ALGORITHM_MANIFEST = [
     icon: 'account_tree',
     available: false,
     size: TREE_SIZE,
+    input: { kind: 'tree' },
     meta: {
       name: 'Red-Black Tree',
       timeComplexity: 'O(log n)',
@@ -183,6 +200,8 @@ export const ALGORITHM_MANIFEST = [
 ];
 
 export const DEFAULT_ALGORITHM_ID = 'bubble-sort';
+const REQUIRED_META_FIELDS = ['name', 'timeComplexity', 'spaceComplexity', 'category', 'tag'];
+const REQUIRED_SIZE_FIELDS = ['default', 'min', 'max'];
 
 export const ALGORITHM_CONFIG = Object.fromEntries(
   ALGORITHM_MANIFEST.map((algorithm) => [algorithm.id, algorithm])
@@ -223,4 +242,65 @@ export function getDefaultDataSize(config) {
 export function clampDataSize(config, size) {
   const range = config.size || ARRAY_SIZE;
   return Math.max(range.min, Math.min(range.max, size));
+}
+
+export function validateAlgorithmManifest(manifest = ALGORITHM_MANIFEST) {
+  const errors = [];
+  const ids = new Set();
+
+  manifest.forEach((algorithm, index) => {
+    const label = algorithm.id || `entry-${index}`;
+
+    if (!algorithm.id) {
+      errors.push(`${label}: missing id`);
+    } else if (ids.has(algorithm.id)) {
+      errors.push(`${label}: duplicate id`);
+    }
+    ids.add(algorithm.id);
+
+    if (!algorithm.type) errors.push(`${label}: missing type`);
+    if (!algorithm.category) errors.push(`${label}: missing category`);
+    if (!algorithm.icon) errors.push(`${label}: missing icon`);
+    if (!algorithm.input?.kind) errors.push(`${label}: missing input.kind`);
+    if (!algorithm.meta) {
+      errors.push(`${label}: missing meta`);
+    } else {
+      REQUIRED_META_FIELDS.forEach((field) => {
+        if (!algorithm.meta[field]) errors.push(`${label}: missing meta.${field}`);
+      });
+    }
+
+    if (!algorithm.size) {
+      errors.push(`${label}: missing size`);
+    } else {
+      REQUIRED_SIZE_FIELDS.forEach((field) => {
+        if (typeof algorithm.size[field] !== 'number') {
+          errors.push(`${label}: missing numeric size.${field}`);
+        }
+      });
+      if (algorithm.size.min > algorithm.size.default || algorithm.size.default > algorithm.size.max) {
+        errors.push(`${label}: size.default must be between size.min and size.max`);
+      }
+    }
+
+    if (algorithm.available) {
+      if (typeof algorithm.generator !== 'function') errors.push(`${label}: available algorithm missing generator`);
+      if (typeof algorithm.dataGenerator !== 'function') errors.push(`${label}: available algorithm missing dataGenerator`);
+      if (!Array.isArray(algorithm.code) || algorithm.code.length === 0) {
+        errors.push(`${label}: available algorithm missing code`);
+      }
+    }
+  });
+
+  return errors;
+}
+
+export function assertValidAlgorithmManifest(manifest = ALGORITHM_MANIFEST) {
+  const errors = validateAlgorithmManifest(manifest);
+
+  if (errors.length > 0) {
+    throw new Error(`Invalid algorithm manifest:\n${errors.join('\n')}`);
+  }
+
+  return true;
 }
