@@ -19,7 +19,7 @@ const STAGE_BY_TYPE = {
 export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubble-sort');
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => (
-    typeof window !== 'undefined' ? window.matchMedia('(min-width: 1440px)').matches : true
+    typeof window !== 'undefined' ? window.innerWidth >= 1728 : true
   ));
   const engine = useVisualizerEngine(selectedAlgorithm);
   const meta = engine.currentAlgoConfig.meta;
@@ -88,6 +88,14 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
           />
 
           <div className="flex-1 min-h-0 relative flex flex-col overflow-hidden">
+            {engine.isAlgorithmLoading && (
+              <div className="absolute inset-x-4 top-4 z-30 flex justify-center pointer-events-none">
+                <div className="glass-panel ghost-border rounded-lg px-3 py-2 shadow-xl flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-primary">
+                  <span className="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
+                  Loading algorithm module
+                </div>
+              </div>
+            )}
             <StageComponent
               currentStep={engine.currentStep}
               isPlaying={engine.isPlaying}
@@ -95,9 +103,20 @@ export default function Workspace({ onNavigateHome, onNavigateLibrary }) {
               onTogglePlayback={engine.togglePlayback}
               onStepForward={engine.stepForward}
               onStepBackward={engine.stepBackward}
+              onJumpToStep={engine.jumpToStep}
+              onJumpToStart={engine.jumpToStart}
+              onJumpToEnd={engine.jumpToEnd}
               onSpeedChange={engine.handleSpeedChange}
               currentStepIndex={engine.currentStepIndex}
               totalSteps={engine.totalSteps}
+              operationTypes={engine.operationTypes}
+              currentOperation={engine.currentOperation}
+              currentOperationBadge={engine.currentOperationBadge}
+              pauseOnOperations={engine.pauseOnOperations}
+              onTogglePauseOperation={engine.togglePauseOperation}
+              bookmarks={engine.bookmarks}
+              onToggleBookmark={engine.toggleBookmark}
+              onJumpToBookmark={engine.jumpToStep}
               code={engine.currentAlgoConfig.code}
               algoId={selectedAlgorithm}
               algorithmId={selectedAlgorithm}

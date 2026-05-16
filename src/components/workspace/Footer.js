@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Footer() {
   return (
-    <footer className="w-full py-6 border-t border-slate-900 bg-slate-950 z-20">
+    <footer className="workspace-footer w-full py-6 border-t border-slate-900 bg-slate-950 z-20">
       <div className="flex flex-col md:flex-row justify-between items-center px-12 w-full gap-8">
         <div className="text-slate-200 font-bold text-[10px] uppercase tracking-[0.1em]">© 2024 ALGOFORGE. ENGINEERED FOR CLARITY.</div>
         <div className="flex gap-8 items-center font-mono text-[10px] uppercase tracking-[0.1em]">

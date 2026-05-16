@@ -1,15 +1,12 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import {
   DEFAULT_ALGORITHM_ID,
   clampDataSize,
   getAlgorithmConfig,
   getDefaultDataSize,
+  loadAlgorithmConfig,
 } from '../algorithms/manifest';
-
-/**
- * Hook personalizado que gestiona toda la lógica de reproducción
- * del algoritmo: play, pause, step forward/back, velocidad, reset.
- */
+import { getOperationBadge, getStepOperation } from '../learningUtils';
 
 const SPEED_MAP = { '0.5x': 1200, '1x': 600, '2x': 300, '4x': 100 };
 
@@ -20,47 +17,37 @@ function getDataSizeFromSource(data, fallback) {
   return fallback;
 }
 
+function getRootForGraph(config, data, requestedRoot) {
+  if (config.type !== 'graph') return null;
+  if (!data?.nodes?.length) return null;
+  return data.nodes.some((node) => node.id === requestedRoot) ? requestedRoot : data.nodes[0].id;
+}
+
 export default function useVisualizerEngine(selectedAlgorithmId = DEFAULT_ALGORITHM_ID) {
-  const currentAlgoConfig = getAlgorithmConfig(selectedAlgorithmId);
-  const initialSize = getDefaultDataSize(currentAlgoConfig);
-
-  // Estado del tamaño/conteo de elementos
-  const [dataSize, setDataSize] = useState(initialSize);
-
-  // Estado del dato fuente (puede ser array o grafo)
-  const [sourceData, setSourceData] = useState(() => {
-    const config = getAlgorithmConfig(selectedAlgorithmId);
-    return config.dataGenerator(getDefaultDataSize(config));
-  });
-
+  const metadataConfig = getAlgorithmConfig(selectedAlgorithmId);
+  const [currentAlgoConfig, setCurrentAlgoConfig] = useState(metadataConfig);
+  const [dataSize, setDataSize] = useState(getDefaultDataSize(metadataConfig));
+  const [sourceData, setSourceData] = useState(null);
   const [rootNodeId, setRootNodeId] = useState(null);
   const [customDataByAlgorithm, setCustomDataByAlgorithm] = useState({});
-
-  // Ref para rastrear el tipo previo y detectar cambios de categoría
-  const prevTypeRef = useRef(currentAlgoConfig.type);
-  const prevAlgorithmRef = useRef(selectedAlgorithmId);
-
-  // Initialize rootNodeId when sourceData changes (for graphs)
-  useEffect(() => {
-    if (currentAlgoConfig.type === 'graph' && sourceData && sourceData.nodes && sourceData.nodes.length > 0) {
-      if (!rootNodeId || !sourceData.nodes.find((node) => node.id === rootNodeId)) {
-        setRootNodeId(sourceData.nodes[0].id);
-      }
-    } else {
-      setRootNodeId(null);
-    }
-  }, [sourceData, currentAlgoConfig.type, rootNodeId]);
-
-  // Estado del motor de pasos
-  const [steps, setSteps] = useState(() => currentAlgoConfig.generator(sourceData).steps);
+  const [steps, setSteps] = useState([]);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState('1x');
+  const [pauseOnOperations, setPauseOnOperations] = useState([]);
+  const [bookmarksByAlgorithm, setBookmarksByAlgorithm] = useState({});
+  const [isAlgorithmLoading, setIsAlgorithmLoading] = useState(true);
 
-  // Ref para el intervalo de reproducción (evita closures obsoletos)
   const intervalRef = useRef(null);
   const currentStepRef = useRef(currentStepIndex);
   const stepsRef = useRef(steps);
+  const configRef = useRef(currentAlgoConfig);
+  const sourceDataRef = useRef(sourceData);
+  const rootNodeRef = useRef(rootNodeId);
+  const pauseOnOperationsRef = useRef(pauseOnOperations);
+  const speedRef = useRef(speed);
+  const prevTypeRef = useRef(metadataConfig.type);
+  const prevAlgorithmRef = useRef(selectedAlgorithmId);
 
   const stopPlayback = useCallback(() => {
     if (intervalRef.current) {
@@ -71,6 +58,13 @@ export default function useVisualizerEngine(selectedAlgorithmId = DEFAULT_ALGORI
   }, []);
 
   const startPlayback = useCallback(() => {
+    if (stepsRef.current.length <= 1 || isAlgorithmLoading) return;
+
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
     if (currentStepRef.current >= stepsRef.current.length - 1) {
       setCurrentStepIndex(0);
       currentStepRef.current = 0;
@@ -84,10 +78,20 @@ export default function useVisualizerEngine(selectedAlgorithmId = DEFAULT_ALGORI
         stopPlayback();
         return;
       }
+
       setCurrentStepIndex(nextIndex);
       currentStepRef.current = nextIndex;
-    }, SPEED_MAP[speed] || 600);
-  }, [speed, stopPlayback]);
+
+      const nextOperation = getStepOperation(
+        stepsRef.current[nextIndex],
+        configRef.current.type,
+        configRef.current.id
+      );
+      if (pauseOnOperationsRef.current.includes(nextOperation)) {
+        stopPlayback();
+      }
+    }, SPEED_MAP[speedRef.current] || 600);
+  }, [isAlgorithmLoading, stopPlayback]);
 
   const togglePlayback = useCallback(() => {
     if (isPlaying) {
@@ -95,54 +99,104 @@ export default function useVisualizerEngine(selectedAlgorithmId = DEFAULT_ALGORI
     } else {
       startPlayback();
     }
-  }, [isPlaying, stopPlayback, startPlayback]);
+  }, [isPlaying, startPlayback, stopPlayback]);
 
   const stepForward = useCallback(() => {
     stopPlayback();
-    setCurrentStepIndex((prev) => Math.min(prev + 1, steps.length - 1));
-  }, [stopPlayback, steps.length]);
+    setCurrentStepIndex((prev) => Math.min(prev + 1, stepsRef.current.length - 1));
+  }, [stopPlayback]);
 
   const stepBackward = useCallback(() => {
     stopPlayback();
     setCurrentStepIndex((prev) => Math.max(prev - 1, 0));
   }, [stopPlayback]);
 
-  const reset = useCallback(() => {
+  const jumpToStep = useCallback((stepIndex) => {
     stopPlayback();
-    setCurrentStepIndex(0);
+    const lastStepIndex = Math.max(stepsRef.current.length - 1, 0);
+    const nextIndex = Math.max(0, Math.min(Number(stepIndex), lastStepIndex));
+    setCurrentStepIndex(nextIndex);
+    currentStepRef.current = nextIndex;
   }, [stopPlayback]);
 
-  // Update steps when algorithm changes (and potentially regenerate data if type changed)
-  useEffect(() => {
-    stopPlayback();
-    const config = getAlgorithmConfig(selectedAlgorithmId);
-    const algorithmChanged = prevAlgorithmRef.current !== selectedAlgorithmId;
-    const savedCustomData = customDataByAlgorithm[selectedAlgorithmId];
+  const jumpToStart = useCallback(() => {
+    jumpToStep(0);
+  }, [jumpToStep]);
 
-    let newData = sourceData;
-    const newType = config.type;
+  const jumpToEnd = useCallback(() => {
+    jumpToStep(stepsRef.current.length - 1);
+  }, [jumpToStep]);
 
-    if (savedCustomData) {
-      newData = savedCustomData;
-      setSourceData(newData);
-      setDataSize(getDataSizeFromSource(newData, getDefaultDataSize(config)));
-    } else if (prevTypeRef.current !== newType) {
-      const defaultSize = getDefaultDataSize(config);
-      newData = config.dataGenerator(defaultSize);
-      setSourceData(newData);
-      setDataSize(defaultSize);
-      prevTypeRef.current = newType;
-    } else if (algorithmChanged) {
-      setDataSize(getDataSizeFromSource(newData, getDefaultDataSize(config)));
-    }
+  const reset = useCallback(() => {
+    jumpToStart();
+  }, [jumpToStart]);
 
-    const { steps: newSteps } = config.generator(newData, rootNodeId);
-    setSteps(newSteps);
+  const setGeneratedState = useCallback((config, nextData, requestedRoot = rootNodeRef.current) => {
+    const nextRoot = getRootForGraph(config, nextData, requestedRoot);
+    const { steps: nextSteps } = config.generator(nextData, nextRoot);
+
+    setSourceData(nextData);
+    sourceDataRef.current = nextData;
+    setRootNodeId(nextRoot);
+    rootNodeRef.current = nextRoot;
+    setSteps(nextSteps);
+    stepsRef.current = nextSteps;
     setCurrentStepIndex(0);
-    prevAlgorithmRef.current = selectedAlgorithmId;
-  }, [customDataByAlgorithm, selectedAlgorithmId, rootNodeId, sourceData, stopPlayback]);
+    currentStepRef.current = 0;
+  }, []);
 
-  // Mantener refs sincronizados con el estado
+  useEffect(() => {
+    let isActive = true;
+    const metadata = getAlgorithmConfig(selectedAlgorithmId);
+
+    stopPlayback();
+    setIsAlgorithmLoading(true);
+    setCurrentAlgoConfig(metadata);
+    configRef.current = metadata;
+    setSteps([]);
+    stepsRef.current = [];
+    setCurrentStepIndex(0);
+    currentStepRef.current = 0;
+
+    loadAlgorithmConfig(selectedAlgorithmId)
+      .then((loadedConfig) => {
+        if (!isActive) return;
+
+        const algorithmChanged = prevAlgorithmRef.current !== selectedAlgorithmId;
+        const typeChanged = prevTypeRef.current !== loadedConfig.type;
+        const savedCustomData = customDataByAlgorithm[selectedAlgorithmId];
+        const defaultSize = getDefaultDataSize(loadedConfig);
+        let nextData = savedCustomData;
+
+        if (!nextData) {
+          if (typeChanged || algorithmChanged || !sourceDataRef.current) {
+            nextData = loadedConfig.dataGenerator(defaultSize);
+          } else {
+            nextData = sourceDataRef.current;
+          }
+        }
+
+        const nextSize = getDataSizeFromSource(nextData, defaultSize);
+
+        setCurrentAlgoConfig(loadedConfig);
+        configRef.current = loadedConfig;
+        setDataSize(clampDataSize(loadedConfig, nextSize));
+        setGeneratedState(loadedConfig, nextData, rootNodeRef.current);
+        prevTypeRef.current = loadedConfig.type;
+        prevAlgorithmRef.current = selectedAlgorithmId;
+        setIsAlgorithmLoading(false);
+      })
+      .catch((error) => {
+        if (!isActive) return;
+        setIsAlgorithmLoading(false);
+        throw error;
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [customDataByAlgorithm, selectedAlgorithmId, setGeneratedState, stopPlayback]);
+
   useEffect(() => {
     currentStepRef.current = currentStepIndex;
   }, [currentStepIndex]);
@@ -151,41 +205,79 @@ export default function useVisualizerEngine(selectedAlgorithmId = DEFAULT_ALGORI
     stepsRef.current = steps;
   }, [steps]);
 
-  const regenerate = useCallback((newData) => {
+  useEffect(() => {
+    configRef.current = currentAlgoConfig;
+  }, [currentAlgoConfig]);
+
+  useEffect(() => {
+    sourceDataRef.current = sourceData;
+  }, [sourceData]);
+
+  useEffect(() => {
+    rootNodeRef.current = rootNodeId;
+  }, [rootNodeId]);
+
+  useEffect(() => {
+    pauseOnOperationsRef.current = pauseOnOperations;
+  }, [pauseOnOperations]);
+
+  useEffect(() => {
+    speedRef.current = speed;
+  }, [speed]);
+
+  useEffect(() => {
+    setBookmarksByAlgorithm((prev) => {
+      const bookmarks = prev[selectedAlgorithmId] || [];
+      const nextBookmarks = bookmarks.filter((stepIndex) => stepIndex < steps.length);
+      if (nextBookmarks.length === bookmarks.length) return prev;
+
+      return {
+        ...prev,
+        [selectedAlgorithmId]: nextBookmarks,
+      };
+    });
+  }, [selectedAlgorithmId, steps.length]);
+
+  const regenerate = useCallback((newData, requestedRoot = rootNodeRef.current) => {
+    const config = configRef.current;
+    if (!config.generator) return;
+
     stopPlayback();
-    const config = getAlgorithmConfig(selectedAlgorithmId);
-    const { steps: newSteps } = config.generator(newData, rootNodeId);
-    setSourceData(newData);
-    setSteps(newSteps);
-    setCurrentStepIndex(0);
-  }, [selectedAlgorithmId, rootNodeId, stopPlayback]);
+    setGeneratedState(config, newData, requestedRoot);
+  }, [setGeneratedState, stopPlayback]);
 
   const handleDataSizeChange = useCallback((newSize) => {
-    const config = getAlgorithmConfig(selectedAlgorithmId);
+    const config = configRef.current;
+    if (!config.dataGenerator) return;
+
     const clamped = clampDataSize(config, newSize);
-    setDataSize(clamped);
     const newData = config.dataGenerator(clamped);
+
+    setDataSize(clamped);
     setCustomDataByAlgorithm((prev) => {
       const next = { ...prev };
       delete next[selectedAlgorithmId];
       return next;
     });
     regenerate(newData);
-  }, [selectedAlgorithmId, regenerate]);
+  }, [regenerate, selectedAlgorithmId]);
 
   const handleRandomize = useCallback(() => {
-    const config = getAlgorithmConfig(selectedAlgorithmId);
+    const config = configRef.current;
+    if (!config.dataGenerator) return;
+
     const newData = config.dataGenerator(dataSize);
+
     setCustomDataByAlgorithm((prev) => {
       const next = { ...prev };
       delete next[selectedAlgorithmId];
       return next;
     });
     regenerate(newData);
-  }, [selectedAlgorithmId, dataSize, regenerate]);
+  }, [dataSize, regenerate, selectedAlgorithmId]);
 
   const handleApplyInput = useCallback((newData) => {
-    const config = getAlgorithmConfig(selectedAlgorithmId);
+    const config = configRef.current;
     const nextSize = getDataSizeFromSource(newData, dataSize);
 
     setCustomDataByAlgorithm((prev) => ({
@@ -197,34 +289,50 @@ export default function useVisualizerEngine(selectedAlgorithmId = DEFAULT_ALGORI
   }, [dataSize, regenerate, selectedAlgorithmId]);
 
   const handleRootNodeChange = useCallback((newRootId) => {
+    const config = configRef.current;
+    if (!sourceDataRef.current || !config.generator) return;
+
     stopPlayback();
-    const config = getAlgorithmConfig(selectedAlgorithmId);
     setRootNodeId(newRootId);
-    const { steps: newSteps } = config.generator(sourceData, newRootId);
-    setSteps(newSteps);
+    rootNodeRef.current = newRootId;
+    const { steps: nextSteps } = config.generator(sourceDataRef.current, newRootId);
+    setSteps(nextSteps);
+    stepsRef.current = nextSteps;
     setCurrentStepIndex(0);
-  }, [selectedAlgorithmId, sourceData, stopPlayback]);
+    currentStepRef.current = 0;
+  }, [stopPlayback]);
 
   const handleSpeedChange = useCallback((newSpeed) => {
+    speedRef.current = newSpeed;
     setSpeed(newSpeed);
     if (isPlaying) {
       stopPlayback();
-      setTimeout(() => {
-        setIsPlaying(true);
-        intervalRef.current = setInterval(() => {
-          const nextIndex = currentStepRef.current + 1;
-          if (nextIndex >= stepsRef.current.length) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-            setIsPlaying(false);
-            return;
-          }
-          setCurrentStepIndex(nextIndex);
-          currentStepRef.current = nextIndex;
-        }, SPEED_MAP[newSpeed] || 600);
-      }, 0);
+      setTimeout(startPlayback, 0);
     }
-  }, [isPlaying, stopPlayback]);
+  }, [isPlaying, startPlayback, stopPlayback]);
+
+  const togglePauseOperation = useCallback((operation) => {
+    setPauseOnOperations((prev) => (
+      prev.includes(operation)
+        ? prev.filter((value) => value !== operation)
+        : [...prev, operation]
+    ));
+  }, []);
+
+  const toggleBookmark = useCallback((stepIndex = currentStepRef.current) => {
+    setBookmarksByAlgorithm((prev) => {
+      const bookmarks = prev[selectedAlgorithmId] || [];
+      const hasBookmark = bookmarks.includes(stepIndex);
+      const nextBookmarks = hasBookmark
+        ? bookmarks.filter((value) => value !== stepIndex)
+        : [...bookmarks, stepIndex].sort((a, b) => a - b);
+
+      return {
+        ...prev,
+        [selectedAlgorithmId]: nextBookmarks,
+      };
+    });
+  }, [selectedAlgorithmId]);
 
   useEffect(() => {
     return () => {
@@ -234,10 +342,60 @@ export default function useVisualizerEngine(selectedAlgorithmId = DEFAULT_ALGORI
     };
   }, []);
 
-  const currentStep = steps[currentStepIndex] || steps[0];
+  const currentStep = steps[currentStepIndex] || steps[0] || null;
   const totalSteps = steps.length;
-  const isFinished = currentStepIndex >= totalSteps - 1;
+  const isFinished = totalSteps > 0 && currentStepIndex >= totalSteps - 1;
   const progress = totalSteps > 1 ? (currentStepIndex / (totalSteps - 1)) * 100 : 0;
+  const currentOperation = getStepOperation(currentStep, currentAlgoConfig.type, selectedAlgorithmId);
+  const currentOperationBadge = currentStep
+    ? getOperationBadge(currentStep, currentAlgoConfig.type, selectedAlgorithmId)
+    : null;
+  const operationTypes = useMemo(() => {
+    const seen = new Set();
+
+    return steps.reduce((operations, step) => {
+      const operation = getStepOperation(step, currentAlgoConfig.type, selectedAlgorithmId);
+      if (seen.has(operation)) return operations;
+
+      seen.add(operation);
+      operations.push(getOperationBadge(step, currentAlgoConfig.type, selectedAlgorithmId));
+      return operations;
+    }, []);
+  }, [currentAlgoConfig.type, selectedAlgorithmId, steps]);
+  const bookmarks = bookmarksByAlgorithm[selectedAlgorithmId] || [];
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const target = event.target;
+      const tagName = target?.tagName;
+      const isEditing = target?.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(tagName);
+
+      if (isEditing) return;
+
+      if (event.key === ' ') {
+        event.preventDefault();
+        togglePlayback();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        stepForward();
+      } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        stepBackward();
+      } else if (event.key === 'Home') {
+        event.preventDefault();
+        jumpToStart();
+      } else if (event.key === 'End') {
+        event.preventDefault();
+        jumpToEnd();
+      } else if (event.key.toLowerCase() === 'b') {
+        event.preventDefault();
+        toggleBookmark();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [jumpToEnd, jumpToStart, stepBackward, stepForward, toggleBookmark, togglePlayback]);
 
   return {
     currentStep,
@@ -245,16 +403,27 @@ export default function useVisualizerEngine(selectedAlgorithmId = DEFAULT_ALGORI
     totalSteps,
     progress,
     isFinished,
+    bookmarks,
     currentAlgoConfig,
+    currentOperation,
+    currentOperationBadge,
+    isAlgorithmLoading,
     isPlaying,
+    operationTypes,
+    pauseOnOperations,
     speed,
     sourceData,
     dataSize,
     rootNodeId,
     togglePlayback,
+    jumpToStep,
+    jumpToStart,
+    jumpToEnd,
     stepForward,
     stepBackward,
     reset,
+    toggleBookmark,
+    togglePauseOperation,
     handleSpeedChange,
     handleDataSizeChange,
     handleRandomize,

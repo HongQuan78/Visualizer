@@ -31,9 +31,9 @@ export default function SideNavBar({
   }
 
   return (
-    <aside className="h-full w-[85vw] max-w-sm md:w-72 bg-slate-950 flex flex-col border-r border-slate-800/50 z-20">
+    <aside className="h-full w-[92vw] max-w-sm lg:w-72 bg-slate-950 flex flex-col border-r border-slate-800/50 z-20">
       {/* Branding */}
-      <div className="p-5 flex items-center gap-3 border-b border-slate-800/50">
+      <div className="p-4 sm:p-5 flex items-center gap-3 border-b border-slate-800/50">
         <div className="w-9 h-9 rounded-lg bg-surface-container-highest flex items-center justify-center ghost-border">
           <span className="material-symbols-outlined text-primary text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>account_tree</span>
         </div>
@@ -44,7 +44,7 @@ export default function SideNavBar({
       </div>
 
       {/* Contenido scrollable */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
         {/* ─── Selector de algoritmo ─── */}
         <div className="px-4 pt-5 pb-2">
           <label className="font-mono text-[9px] uppercase tracking-widest text-slate-500 block mb-3">Select Algorithm</label>
@@ -193,7 +193,7 @@ export default function SideNavBar({
         <div className="mx-4 mb-4 border-t border-slate-800/50"></div>
 
         {/* ─── Estado de ejecución ─── */}
-        <div className="px-6 pb-6">
+        <div className="px-4 sm:px-6 pb-5 sm:pb-6">
           <label className="font-mono text-[10px] uppercase tracking-widest text-slate-500 block mb-4">Execution State</label>
           <div className="grid grid-cols-[3fr_2fr] gap-2">
             <div className="bg-surface-container-low p-3 rounded-xl ghost-border flex flex-col justify-center">
@@ -217,7 +217,7 @@ export default function SideNavBar({
         </div>
 
         {/* ─── Leyenda ─── */}
-        <div className="px-6 pb-6">
+        <div className="px-4 sm:px-6 pb-5 sm:pb-6">
           <label className="font-mono text-[10px] uppercase tracking-widest text-slate-500 block mb-4">Visual Legend</label>
           <div className="grid grid-cols-1 gap-2.5">
             {legend.map((item) => (

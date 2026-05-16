@@ -23,12 +23,12 @@ export default function VisualizationHeader({
   const dataStructureEmptyMsg = isDFS ? 'Stack is empty' : 'Queue is empty';
 
   return (
-    <div className="px-4 lg:px-12 pt-4 pb-1 flex flex-col lg:flex-row justify-between items-start lg:items-end relative gap-3 lg:gap-0">
-      <div className="w-full lg:w-auto">
-        <h1 className="text-2xl lg:text-3xl font-extrabold tracking-tighter leading-tight mb-2 lg:mb-0.5">
+    <div className="visualization-header px-4 lg:px-8 xl:px-12 pt-3 sm:pt-4 pb-2 flex flex-col xl:flex-row justify-between items-start xl:items-end relative gap-3 xl:gap-0">
+      <div className="w-full xl:w-auto min-w-0">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tighter leading-tight mb-2 lg:mb-0.5 truncate">
           {name}
         </h1>
-        <div className="flex gap-4 items-center">
+        <div className="flex flex-wrap gap-2 items-center">
           <span className="bg-secondary-container/30 text-secondary px-2 py-0.5 rounded text-[8px] font-mono tracking-widest uppercase">
             {category}: {tag}
           </span>
@@ -44,12 +44,12 @@ export default function VisualizationHeader({
         </div>
       </div>
 
-      <div className="flex gap-4 md:gap-8 mb-1 w-full lg:w-auto justify-start lg:justify-end">
-        <div className="text-right">
+      <div className="complexity-strip flex gap-2 sm:gap-4 md:gap-8 mb-1 w-full xl:w-auto justify-start xl:justify-end">
+        <div className="complexity-pill text-left xl:text-right">
           <div className="text-[8px] font-mono text-slate-500 uppercase tracking-widest mb-0.5 opacity-70">Time complexity</div>
           <div className="text-xs font-bold font-mono text-primary tracking-tight">{timeComplexity}</div>
         </div>
-        <div className="text-right">
+        <div className="complexity-pill text-left xl:text-right">
           <div className="text-[8px] font-mono text-slate-500 uppercase tracking-widest mb-0.5 opacity-70">Space complexity</div>
           <div className="text-xs font-bold font-mono text-secondary tracking-tight">{spaceComplexity}</div>
         </div>
@@ -57,7 +57,7 @@ export default function VisualizationHeader({
 
       {/* Panel flotante para algoritmos de grafos: Stack/Queue + Start Node */}
       {isGraph ? (
-        <div className="relative lg:absolute left-0 lg:left-12 lg:top-full mt-2 flex flex-col md:flex-row gap-2 md:gap-6 z-10 w-full lg:w-auto">
+        <div className="relative xl:absolute left-0 xl:left-12 xl:top-full mt-2 flex flex-col md:flex-row gap-2 md:gap-6 z-10 w-full xl:w-auto">
           <div className="flex items-center gap-3 glass-panel ghost-border rounded-lg px-3 py-1.5 shadow-md">
             <div className="flex items-center gap-1.5 border-r border-slate-700/50 pr-3">
               <span className="material-symbols-outlined text-[14px] text-slate-400">{dataStructureIcon}</span>
@@ -103,11 +103,11 @@ export default function VisualizationHeader({
 
       {/* Panel flotante para árboles: valores pendientes de inserción */}
       {isTree ? (
-        <div className="relative lg:absolute left-0 lg:left-12 lg:top-full mt-2 flex gap-6 z-10 w-full lg:w-auto">
+        <div className="relative xl:absolute left-0 xl:left-12 xl:top-full mt-2 flex gap-6 z-10 w-full xl:w-auto">
           <div className="flex items-center gap-3 glass-panel ghost-border rounded-lg px-3 py-1.5 shadow-md">
             <div className="flex items-center gap-1.5 border-r border-slate-700/50 pr-3">
               <span className="material-symbols-outlined text-[14px] text-slate-400">queue</span>
-              <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest">Pending Insertions</span>
+              <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest whitespace-nowrap">Pending Insertions</span>
             </div>
             <div className="flex gap-1.5 overflow-x-auto custom-scrollbar items-center max-w-[400px]">
               {queue.length === 0 && <span className="text-[10px] font-mono text-slate-600 italic px-2">All values inserted</span>}

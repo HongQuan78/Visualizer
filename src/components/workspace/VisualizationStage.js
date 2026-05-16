@@ -11,9 +11,20 @@ export default function VisualizationStage({
   onTogglePlayback,
   onStepForward,
   onStepBackward,
+  onJumpToStep,
+  onJumpToStart,
+  onJumpToEnd,
   onSpeedChange,
   currentStepIndex,
   totalSteps,
+  operationTypes = [],
+  currentOperation = null,
+  currentOperationBadge = null,
+  pauseOnOperations = [],
+  onTogglePauseOperation,
+  bookmarks = [],
+  onToggleBookmark,
+  onJumpToBookmark,
   code = [],
   algorithmType = 'array',
   algorithmId = 'bubble-sort',
@@ -35,9 +46,20 @@ export default function VisualizationStage({
     onTogglePlayback,
     onStepForward,
     onStepBackward,
+    onJumpToStep,
+    onJumpToStart,
+    onJumpToEnd,
     onSpeedChange,
     currentStepIndex,
     totalSteps,
+    operationTypes,
+    currentOperation,
+    currentOperationBadge,
+    pauseOnOperations,
+    onTogglePauseOperation,
+    bookmarks,
+    onToggleBookmark,
+    onJumpToBookmark,
   };
 
   // Calcular el valor máximo para escalar las barras
@@ -87,12 +109,12 @@ export default function VisualizationStage({
       playback={playback}
       code={code}
       badges={currentStep.target !== undefined ? [{ label: `TARGET ${currentStep.target}` }] : []}
-      calloutWrapClassName="md:mb-8 lg:pr-[400px]"
+      calloutWrapClassName="md:mb-8 xl:pr-[400px]"
       contentClassName="stage-scroll"
       detailsLaneClassName="custom-scrollbar"
     >
         {/* Bars Container */}
-        <div className="flex-1 flex flex-col justify-center overflow-hidden py-3 md:py-8 min-h-[260px] sm:min-h-[300px] lg:min-h-0">
+        <div className="flex-1 flex flex-col justify-center overflow-hidden py-3 md:py-8 min-h-[260px] sm:min-h-[300px] xl:min-h-0">
           {/* Main Array */}
           <div className="flex-1 flex items-end justify-center gap-0.5 sm:gap-1 md:gap-3 px-1 sm:px-2 md:px-4 transition-all duration-500 min-h-[50%]">
             {array.map((value, index) => {

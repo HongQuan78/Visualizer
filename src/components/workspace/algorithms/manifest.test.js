@@ -6,7 +6,9 @@ import {
   clampDataSize,
   getAlgorithmConfig,
   getDefaultDataSize,
+  loadAlgorithmConfig,
   validateAlgorithmManifest,
+  validateLoadedAlgorithmConfig,
 } from './manifest';
 
 function getSmokeInput(config) {
@@ -66,17 +68,20 @@ describe('algorithm manifest', () => {
 describe('algorithm generators', () => {
   const availableAlgorithms = ALGORITHM_MANIFEST.filter((algorithm) => algorithm.available);
 
-  test.each(availableAlgorithms)('$id generates valid smoke steps', (config) => {
+  test.each(availableAlgorithms)('$id loads and generates valid smoke steps', async (metadata) => {
+    const config = await loadAlgorithmConfig(metadata.id);
     const input = getSmokeInput(config);
     const rootNodeId = config.type === 'graph' ? input.nodes[0].id : undefined;
     const result = config.generator(input, rootNodeId);
 
+    expect(validateLoadedAlgorithmConfig(config)).toEqual([]);
     expectValidSteps(result, config.id);
   });
 
   test.each(availableAlgorithms.filter((algorithm) => algorithm.category === 'Sorting'))(
     '$id ends with a sorted array',
-    (config) => {
+    async (metadata) => {
+      const config = await loadAlgorithmConfig(metadata.id);
       const input = [5, 1, 4, 2, 8, 3];
       const result = config.generator(input);
       const finalArray = result.steps[result.steps.length - 1].array;

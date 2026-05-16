@@ -11,9 +11,20 @@ export default function StageDetailsLane({
   onTogglePlayback,
   onStepForward,
   onStepBackward,
+  onJumpToStep,
+  onJumpToStart,
+  onJumpToEnd,
   onSpeedChange,
   currentStepIndex,
   totalSteps,
+  operationTypes,
+  currentOperation,
+  currentOperationBadge,
+  pauseOnOperations,
+  onTogglePauseOperation,
+  bookmarks,
+  onToggleBookmark,
+  onJumpToBookmark,
   activeLine,
   code,
 }) {
@@ -27,9 +38,20 @@ export default function StageDetailsLane({
         onTogglePlayback={onTogglePlayback}
         onStepForward={onStepForward}
         onStepBackward={onStepBackward}
+        onJumpToStep={onJumpToStep}
+        onJumpToStart={onJumpToStart}
+        onJumpToEnd={onJumpToEnd}
         onSpeedChange={onSpeedChange}
         currentStepIndex={currentStepIndex}
         totalSteps={totalSteps}
+        operationTypes={operationTypes}
+        currentOperation={currentOperation}
+        currentOperationBadge={currentOperationBadge}
+        pauseOnOperations={pauseOnOperations}
+        onTogglePauseOperation={onTogglePauseOperation}
+        bookmarks={bookmarks}
+        onToggleBookmark={onToggleBookmark}
+        onJumpToBookmark={onJumpToBookmark}
       />
       <CodeViewer
         activeLine={activeLine}

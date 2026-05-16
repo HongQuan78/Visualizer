@@ -1,15 +1,3 @@
-import { generateTwoSumSteps, generateTwoSumArray, TWO_SUM_META, TWO_SUM_CODE } from './arrays/twoSum';
-import { generateBubbleSortSteps, generateRandomArray, BUBBLE_SORT_META, BUBBLE_SORT_CODE } from './sorting/bubbleSort';
-import { generateSelectionSortSteps, SELECTION_SORT_META, SELECTION_SORT_CODE } from './sorting/selectionSort';
-import { generateInsertionSortSteps, INSERTION_SORT_META, INSERTION_SORT_CODE } from './sorting/insertionSort';
-import { generateMergeSortSteps, MERGE_SORT_META, MERGE_SORT_CODE } from './sorting/mergeSort';
-import { generateQuickSortSteps, QUICK_SORT_META, QUICK_SORT_CODE } from './sorting/quickSort';
-import { generateBFSSteps, generateRandomGraph, BFS_META, BFS_CODE } from './graphs/bfs';
-import { generateDFSSteps, DFS_META, DFS_CODE } from './graphs/dfs';
-import { generateDijkstraSteps, generateWeightedGraph, DIJKSTRA_META, DIJKSTRA_CODE } from './graphs/dijkstra';
-import { generateBSTInsertSteps, generateRandomBSTValues, BST_INSERT_META, BST_INSERT_CODE } from './trees/bstInsert';
-import { generateFibonacciSteps, generateFibonacciInput, FIBONACCI_META, FIBONACCI_CODE } from './dynamic/fibonacci';
-
 const ARRAY_SIZE = { default: 12, min: 4, max: 30 };
 const GRAPH_SIZE = { default: 8, min: 4, max: 12 };
 const TREE_SIZE = { default: 8, min: 4, max: 12 };
@@ -101,6 +89,119 @@ const DP_LEARNING = {
   ],
 };
 
+const MODULE_CACHE = new Map();
+
+const LOADERS = {
+  'two-sum': () => import('./arrays/twoSum').then((module) => ({
+    generator: module.generateTwoSumSteps,
+    dataGenerator: module.generateTwoSumArray,
+    meta: module.TWO_SUM_META,
+    code: module.TWO_SUM_CODE,
+  })),
+  'bubble-sort': () => import('./sorting/bubbleSort').then((module) => ({
+    generator: module.generateBubbleSortSteps,
+    dataGenerator: generateRandomArray,
+    meta: module.BUBBLE_SORT_META,
+    code: module.BUBBLE_SORT_CODE,
+  })),
+  'selection-sort': () => import('./sorting/selectionSort').then((module) => ({
+    generator: module.generateSelectionSortSteps,
+    dataGenerator: generateRandomArray,
+    meta: module.SELECTION_SORT_META,
+    code: module.SELECTION_SORT_CODE,
+  })),
+  'insertion-sort': () => import('./sorting/insertionSort').then((module) => ({
+    generator: module.generateInsertionSortSteps,
+    dataGenerator: generateRandomArray,
+    meta: module.INSERTION_SORT_META,
+    code: module.INSERTION_SORT_CODE,
+  })),
+  'merge-sort': () => import('./sorting/mergeSort').then((module) => ({
+    generator: module.generateMergeSortSteps,
+    dataGenerator: generateRandomArray,
+    meta: module.MERGE_SORT_META,
+    code: module.MERGE_SORT_CODE,
+  })),
+  'quick-sort': () => import('./sorting/quickSort').then((module) => ({
+    generator: module.generateQuickSortSteps,
+    dataGenerator: generateRandomArray,
+    meta: module.QUICK_SORT_META,
+    code: module.QUICK_SORT_CODE,
+  })),
+  bfs: () => import('./graphs/bfs').then((module) => ({
+    generator: module.generateBFSSteps,
+    dataGenerator: generateRandomGraph,
+    meta: module.BFS_META,
+    code: module.BFS_CODE,
+  })),
+  dfs: () => import('./graphs/dfs').then((module) => ({
+    generator: module.generateDFSSteps,
+    dataGenerator: generateRandomGraph,
+    meta: module.DFS_META,
+    code: module.DFS_CODE,
+  })),
+  dijkstra: () => import('./graphs/dijkstra').then((module) => ({
+    generator: module.generateDijkstraSteps,
+    dataGenerator: module.generateWeightedGraph,
+    meta: module.DIJKSTRA_META,
+    code: module.DIJKSTRA_CODE,
+  })),
+  fibonacci: () => import('./dynamic/fibonacci').then((module) => ({
+    generator: module.generateFibonacciSteps,
+    dataGenerator: module.generateFibonacciInput,
+    meta: module.FIBONACCI_META,
+    code: module.FIBONACCI_CODE,
+  })),
+  'bst-insert': () => import('./trees/bstInsert').then((module) => ({
+    generator: module.generateBSTInsertSteps,
+    dataGenerator: module.generateRandomBSTValues,
+    meta: module.BST_INSERT_META,
+    code: module.BST_INSERT_CODE,
+  })),
+};
+
+function generateRandomArray(size, min = 5, max = 100) {
+  return Array.from({ length: size }, () => Math.floor(Math.random() * (max - min + 1)) + min);
+}
+
+function generateRandomGraph(nodeCount = 8) {
+  const nodes = [];
+  const adjList = {};
+  const radius = 300;
+  const centerX = 500;
+  const centerY = 400;
+
+  for (let i = 0; i < nodeCount; i++) {
+    const angle = (i / nodeCount) * 2 * Math.PI;
+    const id = String.fromCharCode(65 + i);
+    nodes.push({
+      id,
+      x: centerX + radius * Math.cos(angle),
+      y: centerY + radius * Math.sin(angle),
+    });
+    adjList[id] = [];
+  }
+
+  for (let i = 0; i < nodeCount; i++) {
+    const from = nodes[i].id;
+    const targets = Math.floor(Math.random() * 2) + 1;
+
+    for (let j = 0; j < targets; j++) {
+      const toIndex = (i + Math.floor(Math.random() * (nodeCount - 1)) + 1) % nodeCount;
+      const to = nodes[toIndex].id;
+
+      if (!adjList[from].includes(to) && from !== to) {
+        adjList[from].push(to);
+        if (!adjList[to].includes(from)) {
+          adjList[to].push(from);
+        }
+      }
+    }
+  }
+
+  return { nodes, adjList };
+}
+
 export const ALGORITHM_MANIFEST = [
   {
     id: 'two-sum',
@@ -110,10 +211,15 @@ export const ALGORITHM_MANIFEST = [
     available: true,
     size: ARRAY_SIZE,
     input: ARRAY_INPUT,
-    generator: generateTwoSumSteps,
-    dataGenerator: generateTwoSumArray,
-    meta: TWO_SUM_META,
-    code: TWO_SUM_CODE,
+    loader: LOADERS['two-sum'],
+    meta: {
+      name: 'Two Sum',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      category: 'Arrays',
+      tag: 'Hash Map',
+    },
+    code: [],
     learning: SORTING_LEARNING,
   },
   {
@@ -124,10 +230,15 @@ export const ALGORITHM_MANIFEST = [
     available: true,
     size: ARRAY_SIZE,
     input: ARRAY_INPUT,
-    generator: generateBubbleSortSteps,
-    dataGenerator: generateRandomArray,
-    meta: BUBBLE_SORT_META,
-    code: BUBBLE_SORT_CODE,
+    loader: LOADERS['bubble-sort'],
+    meta: {
+      name: 'Bubble Sort',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(1)',
+      category: 'Sorting',
+      tag: 'Comparison',
+    },
+    code: [],
     learning: {
       ...SORTING_LEARNING,
       whyByOperation: {
@@ -145,10 +256,15 @@ export const ALGORITHM_MANIFEST = [
     available: true,
     size: ARRAY_SIZE,
     input: ARRAY_INPUT,
-    generator: generateSelectionSortSteps,
-    dataGenerator: generateRandomArray,
-    meta: SELECTION_SORT_META,
-    code: SELECTION_SORT_CODE,
+    loader: LOADERS['selection-sort'],
+    meta: {
+      name: 'Selection Sort',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(1)',
+      category: 'Sorting',
+      tag: 'Comparison',
+    },
+    code: [],
     learning: SORTING_LEARNING,
   },
   {
@@ -159,10 +275,15 @@ export const ALGORITHM_MANIFEST = [
     available: true,
     size: ARRAY_SIZE,
     input: ARRAY_INPUT,
-    generator: generateInsertionSortSteps,
-    dataGenerator: generateRandomArray,
-    meta: INSERTION_SORT_META,
-    code: INSERTION_SORT_CODE,
+    loader: LOADERS['insertion-sort'],
+    meta: {
+      name: 'Insertion Sort',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(1)',
+      category: 'Sorting',
+      tag: 'Comparison',
+    },
+    code: [],
     learning: SORTING_LEARNING,
   },
   {
@@ -173,10 +294,15 @@ export const ALGORITHM_MANIFEST = [
     available: true,
     size: ARRAY_SIZE,
     input: ARRAY_INPUT,
-    generator: generateMergeSortSteps,
-    dataGenerator: generateRandomArray,
-    meta: MERGE_SORT_META,
-    code: MERGE_SORT_CODE,
+    loader: LOADERS['merge-sort'],
+    meta: {
+      name: 'Merge Sort',
+      timeComplexity: 'O(n log n)',
+      spaceComplexity: 'O(n)',
+      category: 'Sorting',
+      tag: 'Divide & Conquer',
+    },
+    code: [],
     learning: {
       ...SORTING_LEARNING,
       whyByOperation: {
@@ -196,10 +322,15 @@ export const ALGORITHM_MANIFEST = [
     available: true,
     size: ARRAY_SIZE,
     input: ARRAY_INPUT,
-    generator: generateQuickSortSteps,
-    dataGenerator: generateRandomArray,
-    meta: QUICK_SORT_META,
-    code: QUICK_SORT_CODE,
+    loader: LOADERS['quick-sort'],
+    meta: {
+      name: 'Quick Sort',
+      timeComplexity: 'O(n log n)',
+      spaceComplexity: 'O(log n)',
+      category: 'Sorting',
+      tag: 'Divide & Conquer',
+    },
+    code: [],
     learning: QUICK_SORT_LEARNING,
   },
   {
@@ -210,10 +341,15 @@ export const ALGORITHM_MANIFEST = [
     available: true,
     size: GRAPH_SIZE,
     input: { kind: 'graph' },
-    generator: generateBFSSteps,
-    dataGenerator: generateRandomGraph,
-    meta: BFS_META,
-    code: BFS_CODE,
+    loader: LOADERS.bfs,
+    meta: {
+      name: 'Breadth First Search',
+      timeComplexity: 'O(V + E)',
+      spaceComplexity: 'O(V)',
+      category: 'Graphs',
+      tag: 'Traversal',
+    },
+    code: [],
     learning: {
       ...GRAPH_TRAVERSAL_LEARNING,
       whyByOperation: {
@@ -232,10 +368,15 @@ export const ALGORITHM_MANIFEST = [
     available: true,
     size: GRAPH_SIZE,
     input: { kind: 'graph' },
-    generator: generateDFSSteps,
-    dataGenerator: generateRandomGraph,
-    meta: DFS_META,
-    code: DFS_CODE,
+    loader: LOADERS.dfs,
+    meta: {
+      name: 'Depth First Search',
+      timeComplexity: 'O(V + E)',
+      spaceComplexity: 'O(V)',
+      category: 'Graphs',
+      tag: 'Traversal',
+    },
+    code: [],
     learning: {
       ...GRAPH_TRAVERSAL_LEARNING,
       whyByOperation: {
@@ -254,10 +395,15 @@ export const ALGORITHM_MANIFEST = [
     available: true,
     size: GRAPH_SIZE,
     input: { kind: 'graph', weighted: true },
-    generator: generateDijkstraSteps,
-    dataGenerator: generateWeightedGraph,
-    meta: DIJKSTRA_META,
-    code: DIJKSTRA_CODE,
+    loader: LOADERS.dijkstra,
+    meta: {
+      name: "Dijkstra's Shortest Path",
+      timeComplexity: 'O(E log V)',
+      spaceComplexity: 'O(V)',
+      category: 'Graphs',
+      tag: 'Shortest Path',
+    },
+    code: [],
     learning: DIJKSTRA_LEARNING,
   },
   {
@@ -268,10 +414,15 @@ export const ALGORITHM_MANIFEST = [
     available: true,
     size: DP_SIZE,
     input: { kind: 'dp' },
-    generator: generateFibonacciSteps,
-    dataGenerator: generateFibonacciInput,
-    meta: FIBONACCI_META,
-    code: FIBONACCI_CODE,
+    loader: LOADERS.fibonacci,
+    meta: {
+      name: 'Fibonacci',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      category: 'Dynamic',
+      tag: 'Memoization',
+    },
+    code: [],
     learning: DP_LEARNING,
   },
   {
@@ -299,10 +450,15 @@ export const ALGORITHM_MANIFEST = [
     available: true,
     size: TREE_SIZE,
     input: { kind: 'tree' },
-    generator: generateBSTInsertSteps,
-    dataGenerator: generateRandomBSTValues,
-    meta: BST_INSERT_META,
-    code: BST_INSERT_CODE,
+    loader: LOADERS['bst-insert'],
+    meta: {
+      name: 'BST Insert',
+      timeComplexity: 'O(log n)',
+      spaceComplexity: 'O(1)',
+      category: 'Trees',
+      tag: 'Binary Tree',
+    },
+    code: [],
     learning: TREE_LEARNING,
   },
   {
@@ -360,6 +516,23 @@ export function getAlgorithmConfig(algorithmId) {
   return ALGORITHM_CONFIG[algorithmId] || ALGORITHM_CONFIG[DEFAULT_ALGORITHM_ID];
 }
 
+export async function loadAlgorithmConfig(algorithmId) {
+  const metadata = getAlgorithmConfig(algorithmId);
+
+  if (!metadata.available) return metadata;
+  if (MODULE_CACHE.has(metadata.id)) return MODULE_CACHE.get(metadata.id);
+
+  const loadedConfigPromise = metadata.loader().then((implementation) => ({
+    ...metadata,
+    ...implementation,
+    meta: implementation.meta || metadata.meta,
+    code: implementation.code || metadata.code,
+  }));
+
+  MODULE_CACHE.set(metadata.id, loadedConfigPromise);
+  return loadedConfigPromise;
+}
+
 export function getDefaultDataSize(config) {
   return config.size?.default || ARRAY_SIZE.default;
 }
@@ -409,10 +582,9 @@ export function validateAlgorithmManifest(manifest = ALGORITHM_MANIFEST) {
     }
 
     if (algorithm.available) {
-      if (typeof algorithm.generator !== 'function') errors.push(`${label}: available algorithm missing generator`);
-      if (typeof algorithm.dataGenerator !== 'function') errors.push(`${label}: available algorithm missing dataGenerator`);
-      if (!Array.isArray(algorithm.code) || algorithm.code.length === 0) {
-        errors.push(`${label}: available algorithm missing code`);
+      if (typeof algorithm.loader !== 'function') errors.push(`${label}: available algorithm missing loader`);
+      if (!Array.isArray(algorithm.code)) {
+        errors.push(`${label}: missing code placeholder`);
       }
     }
   });
@@ -428,4 +600,17 @@ export function assertValidAlgorithmManifest(manifest = ALGORITHM_MANIFEST) {
   }
 
   return true;
+}
+
+export function validateLoadedAlgorithmConfig(config) {
+  const errors = [];
+  const label = config.id || 'loaded-algorithm';
+
+  if (typeof config.generator !== 'function') errors.push(`${label}: loaded algorithm missing generator`);
+  if (typeof config.dataGenerator !== 'function') errors.push(`${label}: loaded algorithm missing dataGenerator`);
+  if (!Array.isArray(config.code) || config.code.length === 0) {
+    errors.push(`${label}: loaded algorithm missing code`);
+  }
+
+  return errors;
 }

@@ -12,9 +12,20 @@ export default function DPStage({
   onTogglePlayback,
   onStepForward,
   onStepBackward,
+  onJumpToStep,
+  onJumpToStart,
+  onJumpToEnd,
   onSpeedChange,
   currentStepIndex,
   totalSteps,
+  operationTypes = [],
+  currentOperation = null,
+  currentOperationBadge = null,
+  pauseOnOperations = [],
+  onTogglePauseOperation,
+  bookmarks = [],
+  onToggleBookmark,
+  onJumpToBookmark,
   code = [],
   algorithmType = 'dp',
   algorithmId = 'fibonacci',
@@ -55,9 +66,20 @@ export default function DPStage({
     onTogglePlayback,
     onStepForward,
     onStepBackward,
+    onJumpToStep,
+    onJumpToStart,
+    onJumpToEnd,
     onSpeedChange,
     currentStepIndex,
     totalSteps,
+    operationTypes,
+    currentOperation,
+    currentOperationBadge,
+    pauseOnOperations,
+    onTogglePauseOperation,
+    bookmarks,
+    onToggleBookmark,
+    onJumpToBookmark,
   };
 
   return (
@@ -69,14 +91,14 @@ export default function DPStage({
       playback={playback}
       code={code}
       showGrid
-      calloutWrapClassName="md:mb-8 lg:pr-[400px] pt-3 md:pt-8"
+      calloutWrapClassName="md:mb-8 xl:pr-[400px] pt-3 md:pt-8"
       contentClassName="stage-scroll"
       detailsLaneClassName="custom-scrollbar"
     >
         {/* Zona de la tabla DP */}
-        <div className="flex-1 relative mb-4 lg:mb-6 flex flex-col min-h-[300px] sm:min-h-[380px] lg:min-h-0">
+        <div className="flex-1 relative mb-4 lg:mb-6 flex flex-col min-h-[300px] sm:min-h-[380px] xl:min-h-0">
           <div className="flex-1 relative min-h-0 overflow-auto custom-scrollbar flex items-center justify-center p-2 md:p-4">
-            <div className="w-full h-full min-w-[560px] sm:min-w-[680px] md:min-w-0 flex items-center justify-center">
+            <div className="w-full h-full min-w-[420px] sm:min-w-[560px] md:min-w-[680px] xl:min-w-0 flex items-center justify-center">
             <svg 
               viewBox={`0 0 1000 500`} 
               preserveAspectRatio="xMidYMid meet" 

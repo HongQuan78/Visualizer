@@ -37,7 +37,7 @@ const TYPE_OPERATIONS = {
 };
 
 export function getOperationBadge(step, type, algoId) {
-  const operation = step?.operation || inferOperation(step, type, algoId);
+  const operation = getStepOperation(step, type, algoId);
   const label = TYPE_OPERATIONS[type]?.[operation] || toTitleCase(operation);
 
   return {
@@ -47,8 +47,12 @@ export function getOperationBadge(step, type, algoId) {
   };
 }
 
+export function getStepOperation(step, type, algoId) {
+  return step?.operation || inferOperation(step, type, algoId);
+}
+
 export function getStepWhy(step, type, algoId, learning = {}) {
-  const operation = step?.operation || inferOperation(step, type, algoId);
+  const operation = getStepOperation(step, type, algoId);
   const algorithmWhy = learning.whyByOperation?.[operation];
   const typeWhy = DEFAULT_WHY[type]?.[operation];
 

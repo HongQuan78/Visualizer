@@ -12,9 +12,20 @@ export default function TreeStage({
   onTogglePlayback,
   onStepForward,
   onStepBackward,
+  onJumpToStep,
+  onJumpToStart,
+  onJumpToEnd,
   onSpeedChange,
   currentStepIndex,
   totalSteps,
+  operationTypes = [],
+  currentOperation = null,
+  currentOperationBadge = null,
+  pauseOnOperations = [],
+  onTogglePauseOperation,
+  bookmarks = [],
+  onToggleBookmark,
+  onJumpToBookmark,
   code = [],
   algorithmType = 'tree',
   algorithmId = 'bst-insert',
@@ -45,12 +56,23 @@ export default function TreeStage({
     onTogglePlayback,
     onStepForward,
     onStepBackward,
+    onJumpToStep,
+    onJumpToStart,
+    onJumpToEnd,
     onSpeedChange,
     currentStepIndex,
     totalSteps,
+    operationTypes,
+    currentOperation,
+    currentOperationBadge,
+    pauseOnOperations,
+    onTogglePauseOperation,
+    bookmarks,
+    onToggleBookmark,
+    onJumpToBookmark,
   };
   const insertionIndicator = currentInsertValue !== null ? (
-    <div className="flex justify-center mb-2 pr-0 lg:pr-[400px] z-20">
+    <div className="flex justify-center mb-2 pr-0 xl:pr-[400px] z-20">
       <div className="flex items-center gap-2 glass-panel ghost-border rounded-lg px-4 py-1.5 shadow-md">
         <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest">Inserting</span>
         <span className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-sm font-mono text-emerald-400 font-bold animate-pulse">
@@ -74,14 +96,14 @@ export default function TreeStage({
       code={code}
       showGrid
       subheader={insertionIndicator}
-      calloutWrapClassName="md:mb-4 pr-0 lg:pr-[400px] pt-3 md:pt-8"
+      calloutWrapClassName="md:mb-4 pr-0 xl:pr-[400px] pt-3 md:pt-8"
       contentClassName="stage-scroll"
       detailsLaneClassName="custom-scrollbar"
     >
       {/* Zona del árbol SVG */}
-      <div className="flex-1 relative mb-4 lg:mb-6 flex flex-col min-h-[300px] sm:min-h-[380px] lg:min-h-0">
+      <div className="flex-1 relative mb-4 lg:mb-6 flex flex-col min-h-[300px] sm:min-h-[380px] xl:min-h-0">
           <div className="flex-1 relative min-h-0 overflow-auto custom-scrollbar flex items-center justify-center p-2 md:p-4">
-            <div className="w-full h-full min-w-[560px] sm:min-w-[680px] md:min-w-0 flex items-center justify-center">
+            <div className="w-full h-full min-w-[420px] sm:min-w-[560px] md:min-w-[680px] xl:min-w-0 flex items-center justify-center">
               <svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" className="w-full h-full max-h-[100%] drop-shadow-2xl">
               <defs>
                 <filter id="treeGlow">

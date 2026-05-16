@@ -12,9 +12,20 @@ export default function GraphStage({
   onTogglePlayback,
   onStepForward,
   onStepBackward,
+  onJumpToStep,
+  onJumpToStart,
+  onJumpToEnd,
   onSpeedChange,
   currentStepIndex,
   totalSteps,
+  operationTypes = [],
+  currentOperation = null,
+  currentOperationBadge = null,
+  pauseOnOperations = [],
+  onTogglePauseOperation,
+  bookmarks = [],
+  onToggleBookmark,
+  onJumpToBookmark,
   code = [],
   algoId = 'bfs',
   algorithmType = 'graph',
@@ -105,9 +116,20 @@ export default function GraphStage({
     onTogglePlayback,
     onStepForward,
     onStepBackward,
+    onJumpToStep,
+    onJumpToStart,
+    onJumpToEnd,
     onSpeedChange,
     currentStepIndex,
     totalSteps,
+    operationTypes,
+    currentOperation,
+    currentOperationBadge,
+    pauseOnOperations,
+    onTogglePauseOperation,
+    bookmarks,
+    onToggleBookmark,
+    onJumpToBookmark,
   };
   const details = isDijkstra ? (
     <div className="glass-panel ghost-border rounded-xl p-3 shadow-xl flex flex-col gap-3 shrink-0">
@@ -349,9 +371,20 @@ export default function GraphStage({
             onTogglePlayback={onTogglePlayback}
             onStepForward={onStepForward}
             onStepBackward={onStepBackward}
+            onJumpToStep={onJumpToStep}
+            onJumpToStart={onJumpToStart}
+            onJumpToEnd={onJumpToEnd}
             onSpeedChange={onSpeedChange}
             currentStepIndex={currentStepIndex}
             totalSteps={totalSteps}
+            operationTypes={operationTypes}
+            currentOperation={currentOperation}
+            currentOperationBadge={currentOperationBadge}
+            pauseOnOperations={pauseOnOperations}
+            onTogglePauseOperation={onTogglePauseOperation}
+            bookmarks={bookmarks}
+            onToggleBookmark={onToggleBookmark}
+            onJumpToBookmark={onJumpToBookmark}
           />
         </div>
 
